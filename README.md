@@ -11,6 +11,25 @@ simple script to decrypt all `.gpg` files, recursively, in a folder.
 
 usage : `./ddir.sh folder/`
 
+example of output :
+
+```
+➜  ~ ddir pictures 
+decrypting pictures...
+[+] pictures/IMG_20190826_110611.jpg.gpg
+[+] pictures/IMG_20190826_110624.jpg.gpg
+[+] pictures/IMG_20190826_110626.jpg.gpg
+[+] pictures/IMG_20190826_110707.jpg.gpg
+[+] pictures/IMG_20190826_110628.jpg.gpg
+[+] pictures/IMG_20190826_110711.jpg.gpg
+[+] pictures/IMG_20190826_110609.jpg.gpg
+[+] pictures/IMG_20190826_214215.jpg.gpg
+[+] pictures/IMG_20190826_110612.jpg.gpg
+[+] pictures/IMG_20190826_110635.jpg.gpg
+[+] pictures/IMG_20190826_110634.jpg.gpg
+done
+```
+
 ### ssh_connection.sh
 
 simple script which output all incoming ssh attempt and connection. the script also print date, ip and location.
