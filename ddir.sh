@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 # simple script to decrypt all .gpg files, recursively, in a folder.
+# usage : ddir folder/
 
 if [ -z "$1" ]
 then
