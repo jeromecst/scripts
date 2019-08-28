@@ -37,9 +37,9 @@ simple script which output all incoming ssh attempt and connection. the script a
 _example of output :_
 
 ```
-2019-08-13@14:00:47 --> 35.203.50.234 <-- United States | Mountain View
-2019-08-13@14:00:52 --> 35.203.50.234 <-- United States | Mountain View
-2019-08-13@14:00:57 --> 35.203.50.234 <-- United States | Mountain View
+2019-08-13@14:00:47 --> 35.203.50.XXX <-- United States | Mountain View
+2019-08-13@14:00:52 --> 35.203.50.XXX <-- United States | Mountain View
+2019-08-13@14:00:57 --> 35.203.50.XXX <-- United States | Mountain View
 
 2019-08-13@14:09:02 --> 185.220.101.XX <-- Germany | London <new>
 2019-08-13@14:09:08 --> 185.220.101.XX <-- Germany | London
