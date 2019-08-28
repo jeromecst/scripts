@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+# simple script to decrypt all .gpg files, recursively, in a folder.
+
 if [ -z "$1" ]
 then
 	echo Please specify a folder
