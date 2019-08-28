@@ -1,6 +1,10 @@
 # scripts
 Useful scripts to enhance your Linux experience
 
+---
+
+in order to run the script, you need to set permission `chmod +x script.sh`. 
+
 ### ddir.sh
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
@@ -9,7 +13,7 @@ usage : `./ddir.sh folder/`
 
 ### ssh_connection.sh
 
-simple script which output all incoming ssh attempt and connection. The script also output date, ip and location.
+simple script which output all incoming ssh attempt and connection. the script also print date, ip and location.
 
 _example of output :_
 
