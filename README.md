@@ -11,7 +11,7 @@ simple script to decrypt all `.gpg` files, recursively, in a folder.
 
 usage : `./ddir.sh folder/`
 
-example of output :
+_example of output :_
 
 ```
 ➜  ~ ddir pictures 
