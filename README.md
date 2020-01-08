@@ -59,3 +59,17 @@ _example of output :_
 ```
 
 usage : `./ssh_connection.sh`
+
+### bd.py
+
+script to print the following birthdate of your friends/family in the following days
+
+_example of output :_
+
+```
+Yasmine Burns fête ses 18 ans dans 2 jours
+Jesse Hutton fête ses 17 ans dans 12 jours
+Anniversaire de Krzysztof Howarth dans 23 jours
+Hallam Marsden fête ses 55 ans dans 29 jours
+Tess Robin fête ses 20 ans dans 38 jours
+```
