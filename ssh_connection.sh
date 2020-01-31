@@ -74,6 +74,6 @@ while true ; do
 		space="true"
 	fi
 
-	# si /tmp/ips/ficher a plus de 24h, on le supprime
+	# if /tmp/ips/file is more than 24hours old, we delete it
 	/usr/bin/find /tmp/ips/ -type f -name '*' -mtime +1 -exec rm {} \;
 done
