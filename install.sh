@@ -1,4 +1,4 @@
 #!/bin/bash
 
 chmod +x *.sh *.py
-sudo cp *.sh *.py /usr/local/bin
+rsync -urv --progress --delete *.sh *.py /usr/local/bin/
