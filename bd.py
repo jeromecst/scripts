@@ -62,17 +62,18 @@ class BirthdayManager:
     def add_persons(self, p):
         self.list_of_person.append(p)
 
-    def next_birthdays(self, days):
-        year = self.currDate.year
+    def isLeap(self, year):
         if year % 4 != 0:
-            leap = False
+            return False
         elif year % 100 != 0:
-            leap = True
+            return True
         elif year % 400 != 0:
-            leap = False
+            return False
         else:
-            leap = True
-        if leap:
+            return True
+
+    def next_birthdays(self, days):
+        if self.isLeap(self.currDate.year):
             year = 400
         else:
             year = 1
