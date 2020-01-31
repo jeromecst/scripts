@@ -67,13 +67,19 @@ class BirthdayManager:
             for p in self.list_of_person:
                 if self.currDate.__add__(dt.timedelta(i)).replace(year=1).__eq__(p.birthdate.replace(year=1)):
                     name = Color.BOLD + p.name + Color.END
-                    if p.birthdate.year > 100:
-                        print(name, "fête ses", self.currDate.year - p.birthdate.year, "ans dans", i, "jours")
+                    if i == 0:
+                        if p.birthdate.year > 100:
+                            print(name, "fête ses", self.currDate.year - p.birthdate.year, "ans aujourd'hui !!!")
+                        else:
+                            print("Anniversaire de", name, "aujourd'hui !!!")
                     else:
-                        print("Anniversaire de", name, "dans", i, "jours")
+                        if p.birthdate.year > 100:
+                            print(name, "fête ses", self.currDate.year - p.birthdate.year, "ans dans", i, "jours")
+                        else:
+                            print("Anniversaire de", name, "dans", i, "jours")
 
 
 fp = "/home/jerome/.jserv/notes/bd.md"
 
 BD = BirthdayManager(fp)
-BD.next_birthdays(50)
+BD.next_birthdays(20)
