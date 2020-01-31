@@ -65,7 +65,7 @@ class BirthdayManager:
     def next_birthdays(self, days):
         for i in range(days):
             for p in self.list_of_person:
-                if self.currDate.__add__(dt.timedelta(i)).replace(year=1).__eq__(p.birthdate.replace(year=1)):
+                if self.currDate.__add__(dt.timedelta(days=i)).replace(year=1).__eq__(p.birthdate.replace(year=1)):
                     name = Color.BOLD + p.name + Color.END
                     if i == 0:
                         if p.birthdate.year > 100:
@@ -82,4 +82,7 @@ class BirthdayManager:
 fp = "/home/jerome/.jserv/notes/bd.md"
 
 BD = BirthdayManager(fp)
-BD.next_birthdays(20)
+for i in range(100):
+    print(BD.currDate + dt.timedelta(days=i))
+BD.next_birthdays(60)
+
