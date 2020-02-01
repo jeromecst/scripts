@@ -62,10 +62,25 @@ class BirthdayManager:
     def add_persons(self, p):
         self.list_of_person.append(p)
 
+    def isLeap(self, year):
+        if year % 4 != 0:
+            return False
+        elif year % 100 != 0:
+            return True
+        elif year % 400 != 0:
+            return False
+        else:
+            return True
+
     def next_birthdays(self, days):
+        if self.isLeap(self.currDate.year):
+            year = 400
+        else:
+            year = 1
         for i in range(days):
+            date2 = (self.currDate.replace(year=year) + dt.timedelta(days=i))
             for p in self.list_of_person:
-                if self.currDate.__add__(dt.timedelta(days=i)).replace(year=1).__eq__(p.birthdate.replace(year=1)):
+                if date2.__eq__(p.birthdate.replace(year=year)):
                     name = Color.BOLD + p.name + Color.END
                     if i == 0:
                         if p.birthdate.year > 100:
@@ -82,7 +97,4 @@ class BirthdayManager:
 fp = "/home/jerome/.jserv/notes/bd.md"
 
 BD = BirthdayManager(fp)
-for i in range(100):
-    print(BD.currDate + dt.timedelta(days=i))
 BD.next_birthdays(60)
-
