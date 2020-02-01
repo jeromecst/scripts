@@ -3,13 +3,16 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-in order to run the script, you need to set permission `chmod +x script.sh`. 
+* in order to run the script, you need to set permission `chmod +x script.sh`. 
+
+* you can install all script by executing `./install.sh`
+
 
 ### ddir.sh
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
 
-usage : `./ddir.sh folder/`
+usage : `ddir.sh folder/`
 
 _example of output :_
 
@@ -58,7 +61,7 @@ _example of output :_
 2019-08-13@14:09:44 --> 158.69.212.XXX <-- Canada | Montreal <new>
 ```
 
-usage : `./ssh_connection.sh`
+usage : `ssh_connection.sh`
 
 ### bd.py
 
