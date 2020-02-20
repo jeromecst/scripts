@@ -6,11 +6,11 @@ Useful scripts to enhance your Linux experience
 * you can install all scripts by executing `./install.sh`
 
 
-### ddir.sh
+### ddir
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
 
-usage : `ddir.sh folder/`
+usage : `ddir folder/`
 
 _example of output :_
 

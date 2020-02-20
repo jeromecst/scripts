@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+# simple script to decrypt all .gpg files, recursively, in a folder.
+# usage : ddir folder/
+
+export GPG_TTY=$(tty)
+
+dir=".fillleesssss/"
+
+if [ -z "$1" ]
+then
+	echo Please specify a folder
+else
+	cd "$1"
+	if [[ -n $(find . -maxdepth 1 -name "*.gpg") ]]
+	then
+		rm "$dir" -fr
+		mkdir "$dir"
+		find . -maxdepth 1 -type f -name "*.gpg" -exec mv {} "$dir" \;
+		cd "$dir"
+		gpg --decrypt-files *.gpg
+		rm -f *.gpg
+		mv * ../
+		cd ..
+		rm "$dir" -fr
+	fi
+fi
