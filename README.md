@@ -3,9 +3,7 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-* in order to run the script, you need to set permission `chmod +x script.sh`. 
-
-* you can install all script by executing `./install.sh`
+* you can install all scripts by executing `./install.sh`
 
 
 ### ddir.sh
