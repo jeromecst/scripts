@@ -22,7 +22,9 @@ else
 	do
 		gpg --yes -o "$file" -d "$file".gpg &> /dev/null
 		echo [+] "$file".gpg
-		rm -f "$file".gpg &> /dev/null
+		if test -f "$file"; then
+                        rm -f "$file".gpg &> /dev/null
+                fi
 	done < /tmp/gpgfile
 
 	if [ ! -s /tmp/gpgfile ]
