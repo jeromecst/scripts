@@ -1,0 +1,11 @@
+#!/bin/bash
+
+date=$(date +%d-%m-%y)
+
+rsync -urv --progress --delete / -e ssh  jserv@homelocal:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
+rsync -urv --progress --delete / -e ssh jserv@home:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
+ssh jserv@home 'echo "$(date)" >> /home/jserv/site2/.log'
+ssh jserv@home 'chmod 755 /home/jserv/site2/ -R'
+
+pacman -Qe > /tmp/installedPackages
+rsync /tmp/installedPackages jserv@home:/home/jserv/bcrypted/saveconfig/ --progress -urv
