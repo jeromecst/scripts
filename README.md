@@ -3,7 +3,7 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-* you can install all scripts by executing `./install.sh`
+* you can install all scripts by executing `sudo bash install.sh`
 
 
 ### ddir
@@ -31,7 +31,7 @@ decrypting pictures...
 done
 ```
 
-### ssh_connection.sh
+### ssh_connection
 
 simple script which output all incoming ssh attempt and connection. the script also print date, ip and location.
 
@@ -59,9 +59,9 @@ _example of output :_
 2019-08-13@14:09:44 --> 158.69.212.XXX <-- Canada | Montreal <new>
 ```
 
-usage : `ssh_connection.sh`
+usage : `ssh_connection`
 
-### bd.py
+### bd
 
 script to print the following birthdate of your friends/family in the following days
 
