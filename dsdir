@@ -5,7 +5,7 @@
 
 export GPG_TTY=$(tty)
 
-dir=".fillleesssss/"
+dir=".filetemp15678896156486456123/"
 
 if [ -z "$1" ]
 then
