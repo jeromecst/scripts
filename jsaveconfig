@@ -6,14 +6,14 @@ pacman -Qe > /tmp/installedPackages
 
 if ping -c 1 -W 1 jservlocal
 then
-	rsync -urv --progress --delete / -e ssh  jserv@homelocal:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
-	ssh jserv@homelocal 'echo "$(date)" >> /home/jserv/site2/.log'
-	ssh jserv@homelocal 'chmod 766 /home/jserv/site2/ -R'
-	rsync /tmp/installedPackages jserv@homelocal:/home/jserv/bcrypted/saveconfig/ --progress -urv
+	rsync -urv --progress --delete / -e ssh  jserv@jservlocal:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
+	ssh jserv@jserlocal 'echo "$(date)" >> /home/jserv/site2/.log'
+	ssh jserv@jserlocal 'chmod 766 /home/jserv/site2/ -R'
+	rsync /tmp/installedPackages jserv@jserlocal:/home/jserv/bcrypted/saveconfig/ --progress -urv
 else
-	rsync -urv --progress --delete / -e ssh jserv@home:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
-	ssh jserv@home 'echo "$(date)" >> /home/jserv/site2/.log'
-	ssh jserv@home 'chmod 766 /home/jserv/site2/ -R'
-	rsync /tmp/installedPackages jserv@home:/home/jserv/bcrypted/saveconfig/ --progress -urv
+	rsync -urv --progress --delete / -e ssh jserv@jserv:/home/jserv/site2/ --files-from=/home/jerome/.config/jsaveconfig
+	ssh jserv@jserv 'echo "$(date)" >> /home/jserv/site2/.log'
+	ssh jserv@jserv 'chmod 766 /home/jserv/site2/ -R'
+	rsync /tmp/installedPackages jserv@jserv:/home/jserv/bcrypted/saveconfig/ --progress -urv
 fi
 
