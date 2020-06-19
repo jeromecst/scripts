@@ -1,8 +1,30 @@
 #!/bin/bash
 
-if [ -z "$1" ]
+while [[ $# -ge 1 ]]; do
+	case "${1}" in
+		-p|--path)
+			path="$2"
+			if [ "$path" = "." ]
+			then
+				path=$(pwd)
+				printf "path is $path\n"
+			else
+				printf "path is $path\n"
+			fi
+			files_only=true
+			shift
+		;;
+	*)
+		printf "unrecognized option $1\n"
+		exit 1
+		;;
+	esac
+	shift
+done
+
+if [ -z $path ]
 then
-	echo Please specify a folder
+	printf "Please specify a folder with -p or --path\n"
 else
-	find "$1" -type d -exec echo {} \; -exec dsdir {} \;
+	find $path -type d -exec echo {} \; -exec dsdir {} \;
 fi

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# probleme : le temps affiché est celui au moment où la commande est executé
+
+while [[ $# -ge 1 ]]; do
+	case "${1}" in
+		-p|--path)
+			path="$2"
+			if [ "$path" = "." ]
+			then
+				path=$(pwd)
+				printf "path is $path\n"
+			else
+				printf "path is $path\n"
+			fi
+			files_only=true
+			shift
+		;;
+		-r)
+			gpguser="$2"
+			printf "gpg user is $gpguser\n"
+			shift
+		;;
+	*)
+		printf "unrecognized option $1\n"
+		exit 1
+		;;
+	esac
+	shift
+done
+
+find $path -type f -not -name "*.gpg" -exec gpg -r $gpguser --yes -e "{}" \; -exec echo "$(date +%D'|'%R) [+] Encrypting {}" \; -exec shred "{}" \; -exec rm "{}" -f \;
