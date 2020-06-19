@@ -6,16 +6,16 @@ Useful scripts to enhance your Linux experience
 * you can install all scripts by executing `./install.sh`
 
 
-### ddir
+### jdecryptdir
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
 
-usage : `ddir -p folder/`
+usage : `jdecryptdir -p folder/`
 
 _example of output :_
 
 ```
-➜  ~ ddir pictures 
+➜  ~ jdecryptdir -p pictures 
 decrypting pictures...
 [+] pictures/IMG_20190826_110611.jpg.gpg
 [+] pictures/IMG_20190826_110624.jpg.gpg
