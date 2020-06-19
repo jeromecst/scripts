@@ -3,7 +3,7 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-* you can install all scripts by executing `sudo bash install.sh`
+* you can install all scripts by executing `./install.sh`
 
 
 ### ddir
@@ -74,3 +74,7 @@ Anniversaire de Krzysztof Howarth dans 23 jours
 Hallam Marsden fête ses 55 ans dans 29 jours
 Tess Robin fête ses 20 ans dans 38 jours
 ```
+
+# SOURCES
+
+* https://likegeeks.com/linux-bash-scripting-awesome-guide-part3/

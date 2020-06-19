@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rsync -urv --progress * /usr/local/bin/
-rm /usr/local/bin/install.sh
-chown $USER /usr/local/bin 
+sudo rsync -urv --progress * /usr/local/bin/
+sudo rm /usr/local/bin/install.sh
+sudo chown $USER /usr/local/bin 
 chmod 755 /usr/local/bin
