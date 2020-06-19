@@ -15,8 +15,7 @@ while [[ $# -ge 1 ]]; do
 			shift
 		;;
 	*)
-		printf "unrecognized option $1\n"
-		exit 1
+		path="$1"
 		;;
 	esac
 	shift
