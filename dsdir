@@ -23,6 +23,11 @@ else
 			cd ..
 			mv $dir/*.gpg .
 			rm $dir -fr
+		else
+			rm -f *.gpg
+			mv * ../
+			cd ..
+			rm "$dir" -fr
 		fi
 	fi
 fi
