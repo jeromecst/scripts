@@ -6,8 +6,8 @@ configpath="/home/jserv/config/"
 
 if ping -c 1 -W 1 jservlocal
 then
-	rsync -urv --progress --delete / -e ssh  jserv@jservlocal:$configpath --files-from=/home/jerome/.config/jsaveconfig
+	rsync -ahzv --progress --delete / -e ssh  jserv@jservlocal:$configpath --files-from=/home/jerome/.config/jsaveconfig
 else
-	rsync -urv --progress --delete / -e ssh jserv@jserv:$configpath --files-from=/home/jerome/.config/jsaveconfig
+	rsync -ahzv --progress --delete / -e ssh jserv@jserv:$configpath --files-from=/home/jerome/.config/jsaveconfig
 fi
 
