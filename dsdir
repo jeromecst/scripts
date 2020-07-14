@@ -18,10 +18,11 @@ else
 		mkdir "$dir"
 		find . -maxdepth 1 -type f -name "*.gpg" -exec mv {} "$dir" \;
 		cd "$dir"
-		gpg --decrypt-files *.gpg
-		rm -f *.gpg
-		mv * ../
-		cd ..
-		rm "$dir" -fr
+		if ! gpg --decrypt-files *.gpg
+		then
+			cd ..
+			mv $dir/*.gpg .
+			rm $dir -fr
+		fi
 	fi
 fi
