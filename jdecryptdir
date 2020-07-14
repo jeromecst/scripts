@@ -1,5 +1,38 @@
 #!/bin/bash
 
+export GPG_TTY=$(tty)
+
+
+dsdir(){
+	dir=".filetemp15678896156486456123/"
+	if [ -z "$1" ]
+	then
+		echo Please specify a folder
+	else
+		cd "$1"
+		if [[ -n $(find . -maxdepth 1 -name "*.gpg") ]]
+		then
+			rm "$dir" -fr
+			mkdir "$dir"
+			find . -maxdepth 1 -type f -name "*.gpg" -exec mv {} "$dir" \;
+			cd "$dir"
+			if ! gpg --decrypt-files *.gpg
+			then
+				cd ..
+				mv $dir/*.gpg .
+				rm $dir -fr
+			else
+				rm -f *.gpg
+				mv * ../
+				cd ..
+				rm "$dir" -fr
+			fi
+		fi
+	fi
+}
+
+export -f dsdir
+
 while [[ $# -ge 1 ]]; do
 	case "${1}" in
 		-p|--path)
@@ -11,7 +44,6 @@ while [[ $# -ge 1 ]]; do
 			else
 				printf "path is $path\n"
 			fi
-			files_only=true
 			shift
 		;;
 	*)
@@ -25,5 +57,5 @@ if [ -z $path ]
 then
 	printf "Please specify a folder with -p or --path\n"
 else
-	find $path -type d -exec echo {} \; -exec dsdir {} \;
+	find $path -type d -exec echo {} \; -exec bash -c 'dsdir "$0"' {} \;
 fi
