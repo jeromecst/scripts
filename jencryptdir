@@ -25,4 +25,11 @@ while [[ $# -ge 1 ]]; do
 	shift
 done
 
-find $path -type f -not -name "*.gpg" -exec gpg -r $gpguser --yes -e "{}" \; -exec echo "$(date +%D'|'%R) [+] Encrypting {}" \; -exec shred "{}" \; -exec rm "{}" -f \;
+find $path -type f -not -name "*.gpg" -exec gpg -r $gpguser --yes -e "{}" \; -exec echo "$(date +%D'|'%R) [+] Encrypting {}" \; -exec bash -c '
+if test -f "{}" 
+then
+	shred "{}"
+	rm "{}" -f
+fi
+
+' \;
