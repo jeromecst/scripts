@@ -26,8 +26,9 @@ while [[ $# -ge 1 ]]; do
 done
 
 find $path -type f -not -name "*.gpg" -exec gpg -r $gpguser --yes -e "{}" \; -exec echo "$(date +%D'|'%R) [+] Encrypting {}" \; -exec bash -c '
-if test -f "{}" 
+if test -f "{}".gpg 
 then
+	echo "{}".gpg exists
 	shred "{}"
 	rm "{}" -f
 fi
