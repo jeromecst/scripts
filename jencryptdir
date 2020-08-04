@@ -28,7 +28,7 @@ done
 find $path -type f -not -name "*.gpg" -exec gpg -r $gpguser --yes -e "{}" \; -exec echo "$(date +%D'|'%R) [+] Encrypting {}" \; -exec bash -c '
 if test -f "{}".gpg 
 then
-	shred "{}"
+	shred "{}" -f -n 1
 	rm "{}" -f
 fi
 
