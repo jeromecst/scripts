@@ -94,7 +94,7 @@ class BirthdayManager:
                             print("Anniversaire de", name, "dans", i, "jours")
 
 
-fp = "/home/jerome/.jserv/notes/bd.md"
+fp = "/home/jserv/notes/bd.md"
 
 BD = BirthdayManager(fp)
 BD.next_birthdays(60)
