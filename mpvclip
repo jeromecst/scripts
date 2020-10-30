@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# requirements : 
+#	- mpv
+#	- xclip
+
+LINK=$(xclip -selection c -o)
+echo Streaming $LINK
+nohup mpv $LINK &>/dev/null 2>&1 &
