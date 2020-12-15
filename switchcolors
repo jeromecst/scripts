@@ -1,0 +1,11 @@
+#!/bin/sh
+
+filename='alacritty.yml'
+cd $HOME/.config/alacritty/
+
+numberOfColors=3
+currentColor=$(cat alacritty.yml | grep "colors: \*color" | sed 's/colors: \*color//g' )
+newColor=$(( $(($currentColor + 1)) % 3  ))
+
+cat $filename | sed "s/colors: \*color[^\n ]*/colors: \*color$newColor/g" > .tmp
+mv .tmp $filename

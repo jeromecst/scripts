@@ -1,0 +1,8 @@
+#!/bin/sh
+
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+host=$(cat .ssh/config | grep "Host " | awk '{ print $2}' | $dmenu -p "ssh" )
+if [ ! -z "$host" ]
+then
+	alacritty -e ssh $host &
+fi

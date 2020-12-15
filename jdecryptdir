@@ -1,0 +1,81 @@
+#!/bin/sh -e
+
+export GPG_TTY=$(tty)
+file_of_dir="/tmp/jdecryptdirs"
+file_of_gpg_files="/tmp/jdecryptgpgfiles"
+
+while [ $# -ge 1 ]; do
+	case "${1}" in
+		-p|--path)
+			path="$2"
+			shift
+			;;
+		-r)
+			userID="$2"
+			shift
+			;;
+		*)
+			if [ ! -z "$path" ]; then
+				printf "unrecognized option $1\n"
+				exit 1
+			else
+				path="$1"
+			fi
+			;;
+	esac
+	shift
+done
+
+
+decrypt_dir () {
+	cd "$line"
+	find . -type f -name "*.gpg" -maxdepth 1 > $file_of_gpg_files
+	if [ ! -s $file_of_gpg_files ]; then
+		printf " : no file to decrypt\n"
+	else
+		printf "\n"
+	fi
+	while read file
+	do
+		printf "		[-] $(date +%T) : decrpyting $(printf "$file" | sed 's/.\///')\n"
+		decryptedfile=$( printf "$file" | sed 's/.gpg//g')
+		if [ "$decryptedfile" = "$file" ]; then
+			printf "name file error, exiting...\n"
+			exit 1
+		fi
+		gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$file" >/dev/null 2>&1
+		if [ ! -f "$decryptedfile" ]; then
+			printf "can't find decrypted file, can't rm original file, exiting...\n"
+			exit 1
+		else
+			rm "$file"
+		fi
+	done < $file_of_gpg_files
+}
+
+if [ -z $path ]
+then
+	printf "Please specify a folder\n"
+	exit 0
+fi
+
+if [ -z $userID ]
+then
+	userID="$USER"
+	printf "no user provided, using $USER by default\n"
+fi
+
+
+cd $path
+path=$(pwd)
+printf "looking for gpg files in $path\n\n"
+find $path -type d > $file_of_dir
+while read line
+do
+	printf "	entering $line"
+	cd "$line"
+	decrypt_dir
+done < $file_of_dir
+
+rm $file_of_dir $file_of_gpg_files -f
+printf "\n"

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# requirements : 
+#	- xclip
+#	- maim
+#	- imv
+#	- dmenu
+
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $dmenu -p "Screenshot")
+
+case $search in
+	"")
+		exit 1
+		;;
+	Screenshot)
+		name_file=$( print "" | $dmenu -p "enter file name" )
+		if [ -z $name_file ]; then
+			name_file=$(date +%F-%T)
+		fi
+		maim -s > $HOME/$name_file.png
+		;;
+	Pin)
+		name_file=$(date +%F-%T)
+		mkdir /tmp/screenshot
+		file=/tmp/screenshot/$name_file.png
+		maim -s > $file
+		imv $file &
+		break
+		;;
+	Gimp)
+		name_file=$(date +%F-%T)
+		file=/tmp/$name_file.png
+		maim -s > $file
+		if [ -e $file ]; then
+			echo $file exists
+			gimp $file &
+		fi
+		break
+		;;
+	Clipboard)
+		maim -s | xclip -selection clipboard -t image/png
+		break
+		;;
+esac

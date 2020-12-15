@@ -1,0 +1,11 @@
+#!/bin/sh
+
+seconds=$1 
+date1=$((`date +%s` + $seconds)) 
+while [ "$date1" -ge `date +%s` ]
+do 
+	tput el
+	echo -n "$(date -u --date @$(($date1 - `date +%s` )) +%H:%M:%S)"
+	echo -n "\033[8D"
+	sleep 1s
+done

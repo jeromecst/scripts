@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+then
+	echo Please specify a folder
+else
+	find "$1" -type d -exec echo {} \; -exec dsdir {} \;
+fi

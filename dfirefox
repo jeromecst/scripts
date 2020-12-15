@@ -1,0 +1,55 @@
+#!/bin/sh
+# requirements : 
+#	- xclip
+#	- dmenu
+#	- firefox
+
+if [ -z $BROWSER ]
+then 
+	browser="qutebrowser"
+else
+	browser=$BROWSER
+fi
+echo $browser
+
+bookmarks="$HOME/.config/bookmarks"
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $dmenu -p "Web" )
+
+if [ -z "$input" ]
+then
+	exit 0
+fi
+
+if [ "$input" = Paste ]
+then
+	input=$(xclip -selection c -o)
+fi
+
+if echo "$input" | grep \\.
+then
+	$browser $input
+	exit 0
+fi
+
+if ! grep -q "$input" $bookmarks 
+then 
+	search=$input
+	input=Web
+fi
+
+link=$(grep "$input" "$bookmarks" | sed "s/.*$input] //g")
+
+if grep -q "?\[$input" $bookmarks
+then
+	if [ -z "$search" ]; then
+		search=$(print "" | $dmenu -p "$input")
+		if [ -z "$search" ]; then 
+			exit 0
+		fi
+	fi
+	echo "$browser $link $search "
+	$browser "$link""$search"
+else
+	$browser $link
+fi
