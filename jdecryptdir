@@ -37,7 +37,7 @@ decrypt_dir () {
 	fi
 	while read file
 	do
-		printf "		[-] $(date +%T) : decrpyting $(printf "$file" | sed 's/.\///')\n"
+		printf "		[-] $(date +%T) : decrypting $(printf "$file" | sed 's/.\///')"
 		decryptedfile=$( printf "$file" | sed 's/.gpg//g')
 		if [ "$decryptedfile" = "$file" ]; then
 			printf "name file error, exiting...\n"
@@ -50,6 +50,7 @@ decrypt_dir () {
 		else
 			rm "$file"
 		fi
+		printf " ✓\n"
 	done < $file_of_gpg_files
 }
 

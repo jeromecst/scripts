@@ -37,7 +37,7 @@ encrypt_dir () {
 	fi
 	while read file
 	do
-		printf "		[+] $(date +%T) : encrpyting $(printf "$file" | sed 's/.\///')\n"
+		printf "		[+] $(date +%T) : encrpyting $(printf "$file" | sed 's/.\///')"
 		encrypted_file="$file".gpg
 		if [ "$encrypted_file" = "$file" ]; then
 			printf "name file error, exiting...\n"
@@ -51,6 +51,7 @@ encrypt_dir () {
 			shred "$file" -f -n 1
 			rm "$file"
 		fi
+		printf " ✓\n"
 	done < $files_to_encrypt
 }
 
