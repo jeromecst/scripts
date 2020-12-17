@@ -8,9 +8,9 @@
 
 if [ -n "$1" ]
 then 
-	maim_command="maim"
-else
 	maim_command="maim -s"
+else
+	maim_command="maim"
 fi
 
 dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
