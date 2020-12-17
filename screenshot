@@ -6,6 +6,13 @@
 #	- imv
 #	- dmenu
 
+if [ -n "$1" ]
+then 
+	maim_command="maim"
+else
+	maim_command="maim -s"
+fi
+
 dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $dmenu -p "Screenshot")
 
@@ -14,24 +21,27 @@ case $search in
 		exit 1
 		;;
 	Screenshot)
-		name_file=$( print "" | $dmenu -p "enter file name" )
+		name_file=$( printf "" | $dmenu -p "enter file name" )
 		if [ -z $name_file ]; then
 			name_file=$(date +%F-%T)
 		fi
-		maim -s > $HOME/$name_file.png
+		$maim_command > $HOME/$name_file.png
 		;;
 	Pin)
 		name_file=$(date +%F-%T)
-		mkdir /tmp/screenshot
+		if [ ! -d /tmp/screenshot ]
+		then 
+			mkdir /tmp/screenshot
+		fi
 		file=/tmp/screenshot/$name_file.png
-		maim -s > $file
+		$maim_command > $file
 		imv $file &
 		break
 		;;
 	Gimp)
 		name_file=$(date +%F-%T)
 		file=/tmp/$name_file.png
-		maim -s > $file
+		$maim_command > $file
 		if [ -e $file ]; then
 			echo $file exists
 			gimp $file &
@@ -39,7 +49,7 @@ case $search in
 		break
 		;;
 	Clipboard)
-		maim -s | xclip -selection clipboard -t image/png
+		$maim_command | xclip -selection clipboard -t image/png
 		break
 		;;
 esac
