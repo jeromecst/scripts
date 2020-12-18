@@ -27,22 +27,22 @@ fi
 # if input contains a dot and doesn't contain a space: suppose it's a link
 if echo "$input" | grep \\. | grep -v ' '
 then
-	$browser $input
+	$browser "$input"
 	exit 0
 fi
 
-if ! grep -q "$input" $bookmarks 
+if ! grep -q "$input" "$bookmarks"
 then 
 	search=$input
-	input=Web
+	input="Web"
 fi
 
-link=$(grep "$input" "$bookmarks" | sed "s/.*"$input"] //g")
+link=$(grep "$input" "$bookmarks" | sed "s/.*$input] //g")
 
-if grep -q "?\["$input"" "$bookmarks"
+if grep -q "?\[$input" "$bookmarks"
 then
 	if [ -z "$search" ]; then
-		search=$(print "" | $dmenu -p "$input")
+		search=$(printf "" | $dmenu -p "$input")
 		if [ -z "$search" ]
 		then 
 			exit 0
