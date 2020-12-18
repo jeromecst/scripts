@@ -10,7 +10,6 @@ then
 else
 	browser=$BROWSER
 fi
-echo $browser
 
 bookmarks="$HOME/.config/bookmarks"
 dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
@@ -26,8 +25,10 @@ then
 	input=$(xclip -selection c -o)
 fi
 
-if echo "$input" | grep \\.
+# if input contains a dot and doesn't contain a space: suppose it's a link
+if echo "$input" | grep \\. | grep -v ' '
 then
+	echo inside input
 	$browser $input
 	exit 0
 fi
@@ -38,18 +39,18 @@ then
 	input=Web
 fi
 
-link=$(grep "$input" "$bookmarks" | sed "s/.*$input] //g")
+link=$(grep "$input" "$bookmarks" | sed "s/.*"$input"] //g")
 
-if grep -q "?\[$input" $bookmarks
+if grep -q "?\["$input"" "$bookmarks"
 then
 	if [ -z "$search" ]; then
 		search=$(print "" | $dmenu -p "$input")
-		if [ -z "$search" ]; then 
+		if [ -z "$search" ]
+		then 
 			exit 0
 		fi
 	fi
-	echo "$browser $link $search "
 	$browser "$link""$search"
 else
-	$browser $link
+	$browser "$link"	
 fi
