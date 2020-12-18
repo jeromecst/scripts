@@ -2,7 +2,6 @@
 # requirements : 
 #	- xclip
 #	- dmenu
-#	- firefox
 
 if [ -z $BROWSER ]
 then 
