@@ -28,7 +28,6 @@ fi
 # if input contains a dot and doesn't contain a space: suppose it's a link
 if echo "$input" | grep \\. | grep -v ' '
 then
-	echo inside input
 	$browser $input
 	exit 0
 fi
