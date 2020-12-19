@@ -1,5 +1,6 @@
 #!/bin/sh
 
+light -N 1
 bar.sh&
 setxkbmap -option caps:escape
 redshift&
