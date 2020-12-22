@@ -158,10 +158,10 @@ while true; do
 		case $display_battery in 
 			1)
 				get_battery
-				bar=" $weather | $disk | $temp | $volume | $network | $battery | $time | $date "
+				bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
 				;;
 			0)
-				bar=" $weather | $disk | $temp | $volume | $network | $time | $date "
+				bar=" $disk | $temp | $volume | $network | $time | $date "
 				;;
 		esac
 		xsetroot -name "$bar"
