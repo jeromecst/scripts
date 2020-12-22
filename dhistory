@@ -1,0 +1,7 @@
+#!/bin/sh
+# requirements : 
+#	- dmenu
+
+histfile="$HOME/.zhistory"
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+$(tac $histfile | sed 's/.*;//g' | $dmenu)
