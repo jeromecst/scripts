@@ -6,7 +6,7 @@ redshift&
 hsetroot -fill $HOME/.wallpaper& 
 if [ ! -f "/sys/class/power_supply/BAT0/status" ]
 then 
-	picom --config $HOME/.config/picom.conf& 
+	#picom --config $HOME/.config/picom.conf& 
 else
 	light -N 1
 fi
