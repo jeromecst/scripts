@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sudo pacman -Rns $(pacman -Qqdt)
+sudo pacman -Sc
