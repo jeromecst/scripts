@@ -2,3 +2,4 @@
 
 sudo pacman -Rns $(pacman -Qqdt)
 sudo pacman -Sc
+sudo paccache -r
