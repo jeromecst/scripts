@@ -138,8 +138,8 @@ while true; do
 			update=1
 			;;
 		200)
-			get_weather
-			update=1
+			#get_weather
+			#update=1
 			;;
 		400) 
 			get_disk
