@@ -37,7 +37,8 @@ then
 	input="Web"
 fi
 
-link=$(grep "$input" "$bookmarks" | sed "s/.*$input] //g")
+link=$(grep "\[$input\]" "$bookmarks" | sed "s/.*$input] //g")
+echo $link
 
 if grep -q "?\[$input" "$bookmarks"
 then
@@ -48,7 +49,7 @@ then
 			exit 0
 		fi
 	fi
-	$browser "$link""$search"
+	$browser "$link""$search" &
 else
-	$browser "$link"	
+	$browser "$link" &
 fi
