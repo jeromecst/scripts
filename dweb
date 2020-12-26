@@ -11,7 +11,7 @@ else
 fi
 
 bookmarks="$HOME/.config/bookmarks"
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
 input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $dmenu -p "Web" )
 
 if [ -z "$input" ]
