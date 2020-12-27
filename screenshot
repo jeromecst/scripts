@@ -3,7 +3,7 @@
 # requirements : 
 #	- xclip
 #	- maim
-#	- imv
+#	- sxiv
 #	- dmenu
 
 if [ -n "$1" ]
@@ -13,7 +13,7 @@ else
 	maim_command="maim"
 fi
 
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
 search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $dmenu -p "Screenshot")
 
 case $search in
@@ -35,7 +35,7 @@ case $search in
 		fi
 		file=/tmp/screenshot/$name_file.png
 		$maim_command > $file
-		imv $file &
+		sxiv -b -p $file &
 		break
 		;;
 	Gimp)
