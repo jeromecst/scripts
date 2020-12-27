@@ -3,8 +3,14 @@
 #	- dmenu
 
 histfile="$HOME/.zhistory"
-if [ -z $DMENU ] 
+if [ -z "$DMENU" ] 
 then 
 	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 fi
-$(tac $histfile | sed 's/:.*;//g' | $DMENU)
+input=$(tac $histfile | $DMENU)
+echo $input
+$input &
+if ! grep -x "$input" $histfile
+then
+	echo "$input" >> $histfile
+fi
