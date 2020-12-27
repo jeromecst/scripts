@@ -1,7 +1,10 @@
 #!/bin/sh
 
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
-app=$(cat $HOME/.config/apps | $dmenu -p "exec")
+if [ -z $DMENU ] 
+then 
+	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+fi
+app=$(cat $HOME/.config/apps | $DMENU -p "exec")
 if [ ! -z "$app" ]
 then
 	alacritty -e $app &

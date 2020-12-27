@@ -10,9 +10,13 @@ else
 	browser=$BROWSER
 fi
 
+if [ -z $DMENU ] 
+then 
+	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+fi
+
 bookmarks="$HOME/.config/bookmarks"
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
-input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $dmenu -p "Web" )
+input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $DMENU -p "Web" )
 
 if [ -z "$input" ]
 then
@@ -43,7 +47,7 @@ echo $link
 if grep -q "?\[$input" "$bookmarks"
 then
 	if [ -z "$search" ]; then
-		search=$(printf "" | $dmenu -p "$input")
+		search=$(printf "" | $DMENU -p "$input")
 		if [ -z "$search" ]
 		then 
 			exit 0

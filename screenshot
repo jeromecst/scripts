@@ -13,15 +13,18 @@ else
 	maim_command="maim"
 fi
 
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
-search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $dmenu -p "Screenshot")
+if [ -z $DMENU ] 
+then 
+	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+fi
+search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $DMENU -p "Screenshot")
 
 case $search in
 	"")
 		exit 1
 		;;
 	Screenshot)
-		name_file=$( printf "" | $dmenu -p "enter file name" )
+		name_file=$( printf "" | $DMENU -p "enter file name" )
 		if [ -z $name_file ]; then
 			name_file=$(date +%F-%T)
 		fi

@@ -1,8 +1,13 @@
 #!/bin/sh
 
 pdf_viewer=zathura
-dmenu="dmenu -l 20 -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
-pdf_file=$(find $HOME/ -name "*.pdf" | $dmenu -p "Zathura")
+if [ -z "$DMENU" ] 
+then 
+	DMENU="dmenu -l 20 -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+else 
+	DMENU="$DMENU -l 20"
+fi
+pdf_file=$(find $HOME/ -not -path '*/[@.]*' -type f -name "*.pdf" | $DMENU -p "Zathura")
 if [ ! $pdf_file = "" ]
 then
 	$pdf_viewer $pdf_file

@@ -123,7 +123,6 @@ muted=0
 update=1 # a boolean
 k=-1
 
-get_weather
 get_disk
 get_volume
 get_date
@@ -137,11 +136,7 @@ while true; do
 			get_time
 			update=1
 			;;
-		200)
-			#get_weather
-			#update=1
-			;;
-		400) 
+		300) 
 			get_disk
 			update=1
 			;;

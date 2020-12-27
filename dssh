@@ -1,7 +1,10 @@
 #!/bin/sh
 
-dmenu="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#5d6b31" -sf "#eeeeee" -i -f"
-host=$(cat .ssh/config | grep "Host " | awk '{ print $2}' | $dmenu -p "ssh" )
+if [ -z $DMENU ] 
+then 
+	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+fi
+host=$(cat .ssh/config | grep "Host " | awk '{ print $2}' | $DMENU -p "ssh" )
 if [ ! -z "$host" ]
 then
 	alacritty -e ssh $host &
