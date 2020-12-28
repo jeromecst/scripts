@@ -13,7 +13,7 @@ else
 	maim_command="maim"
 fi
 
-if [ -z $DMENU ] 
+if [ -z "$DMENU" ] 
 then 
 	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 fi
