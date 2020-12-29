@@ -42,7 +42,6 @@ then
 fi
 
 link=$(grep "\[$input\]" "$bookmarks" | sed "s/.*$input] //g")
-echo $link
 
 if grep -q "?\[$input\]" "$bookmarks"
 then
