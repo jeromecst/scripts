@@ -35,7 +35,7 @@ then
 	exit 0
 fi
 
-if ! grep -q "$input" "$bookmarks"
+if ! grep -q "\[$input\]" "$bookmarks"
 then 
 	search=$input
 	input="Web"
@@ -44,7 +44,7 @@ fi
 link=$(grep "\[$input\]" "$bookmarks" | sed "s/.*$input] //g")
 echo $link
 
-if grep -q "?\[$input" "$bookmarks"
+if grep -q "?\[$input\]" "$bookmarks"
 then
 	if [ -z "$search" ]; then
 		search=$(printf "" | $DMENU -p "$input")
