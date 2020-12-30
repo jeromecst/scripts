@@ -4,6 +4,10 @@
 # see https://github.com/stark/siji for more and free icons
 # and https://www.nerdfonts.com/
 
+# may improve performance, needs tests tho
+LC_ALL=C
+LANG=C
+
 get_bandwidth () {
 	while true
 	do
