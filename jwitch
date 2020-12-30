@@ -1,0 +1,56 @@
+#!/bin/sh
+
+config_file="$HOME/.config/jwitch/config"
+onlivedir="/tmp/streamers_list"
+thumbnail_list="/tmp/streamer_thumb/"
+selected_stm="/tmp/selected"
+
+if [ ! -f "$config_file" ]
+then
+	echo "Can't find config file"
+	exit 0
+fi
+
+if [ -d "$onlivedir" ]
+then
+	rm -rf "$onlivedir"
+	mkdir "$onlivedir"
+else 
+	mkdir "$onlivedir"
+fi
+
+if [ -d "$thumbnail_list" ]
+then
+	rm -fr "$thumbnail_list"
+	mkdir "$thumbnail_list"
+else 
+	mkdir "$thumbnail_list"
+fi
+
+curl_stream () {
+	file_name="$onlivedir/$1.json"
+	curl -s -X GET 'https://api.twitch.tv/helix/search/channels?query='$1'&first=1' \
+		-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
+		-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' | jq '.' \
+		> $file_name 
+
+	is_live=$(grep "is_live" $file_name | awk '{ print $2 }' | sed 's/[, ]//g')
+	if [ "$is_live" = "true" ]
+	then 
+		echo $1 is live
+		thumbnail=$(grep "thumbnail_url" $file_name | awk '{ print $2 }' | sed 's/[," ]//g')
+		wget -q "$thumbnail" -O "$thumbnail_list$1"
+	fi
+}
+
+while read streamer
+do
+	curl_stream "$streamer"
+done < $config_file
+cd $thumbnail_list
+sxiv -tpqob * > "$selected_stm"
+cd /tmp
+while read streamer
+do
+	nohup mpv --mute=yes -ytdl https://www.twitch.tv/$streamer &> /dev/null
+done < "$selected_stm"
