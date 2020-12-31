@@ -43,7 +43,7 @@ fi
 
 link=$(grep "\[$input\]" "$bookmarks" | sed "s/.*$input] //g")
 
-if grep -q "?\[$input\]" "$bookmarks"
+if grep -q "$input.*{}" "$bookmarks"
 then
 	if [ -z "$search" ]; then
 		search=$(printf "" | $DMENU -p "$input")
@@ -52,7 +52,10 @@ then
 			exit 0
 		fi
 	fi
-	$browser "$link""$search" &
+	echo $link
+	link=$(echo "$link" | sed "s/{}/$search/")
+	echo $link
+	$browser "$link"
 else
 	$browser "$link" &
 fi
