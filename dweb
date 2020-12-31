@@ -52,7 +52,10 @@ then
 			exit 0
 		fi
 	fi
-	$browser "$link""$search" &
+	echo $link
+	link=$(echo "$link" | sed "s/{}/$search/")
+	echo $link
+	$browser "$link"
 else
 	$browser "$link" &
 fi
