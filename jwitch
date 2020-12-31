@@ -50,7 +50,11 @@ done < $config_file
 cd $thumbnail_list
 sxiv -tpqob * > "$selected_stm"
 cd /tmp
-while read streamer
+while [ -s $selected_stm ]
 do
-	nohup mpv --mute=yes -ytdl https://www.twitch.tv/$streamer &> /dev/null
-done < "$selected_stm"
+	while read streamer
+	do
+		nohup mpv --mute=yes -ytdl https://www.twitch.tv/$streamer &> /dev/null
+	done < "$selected_stm"
+	sxiv -tpqob * > "$selected_stm"
+done
