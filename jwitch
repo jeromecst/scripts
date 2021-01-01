@@ -1,55 +1,51 @@
 #!/bin/sh
 
-config_file="$HOME/.config/jwitch/config"
-onlivedir="/tmp/streamers_list"
-thumbnail_list="/tmp/streamer_thumb/"
-selected_stm="/tmp/selected"
+configfile="$HOME/.config/jwitch/config"
+maindir="/tmp/jwitch"
+jsondir="$maindir/json"
+thumdir="$maindir/thumb"
+selected="$maindir/selected"
 
-if [ ! -f "$config_file" ]
+if [ ! -f "$configfile" ]
 then
 	echo "Can't find config file"
 	exit 0
 fi
 
-for dir in $onlivedir $thumbnail_list
+for dir in $maindir $jsondir $thumdir
 do
 	if [ -d $dir ]
 	then
-		rm -fr $dir
-		mkdir $dir
+		rm -fr $dir/*
 	else
 		mkdir $dir
 	fi
 done
 
-curl_stream_from_file() {
-	file_name="$onlivedir/$1.json"
-	curl -s -X GET 'https://api.twitch.tv/helix/search/channels?query='$1'&first=1' \
+while read l
+do
+	curl -s -X GET 'https://api.twitch.tv/helix/search/channels?query='$l'&first=1' \
 		-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
 		-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' | jq '.' \
-		> $file_name 
+		> $jsondir/$l &
+done < $configfile
+wait
 
-	is_live=$(grep "is_live" $file_name | awk '{ print $2 }' | sed 's/[, ]//g')
-	if [ "$is_live" = "true" ]
-	then 
-		echo $1 is live
-		thumbnail=$(grep "thumbnail_url" $file_name | awk '{ print $2 }' | sed 's/[," ]//g')
-		wget -q "$thumbnail" -O "$thumbnail_list$1"
+for file in $(ls $jsondir)
+do
+	live=$(cat $jsondir/$file | grep "is_live" | awk '{ print $2 }' | sed 's/[" ,]//g' )
+	if [ $live = "true" ]
+	then
+		link=$(cat $jsondir/$file | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[" ,]//g')
+		wget "$link" -O "$thumdir/$file" &
 	fi
-}
-
-while read streamer
-do
-	curl_stream_from_file "$streamer"
-done < $config_file
-cd $thumbnail_list
-sxiv -tpqob * > "$selected_stm"
-cd /tmp
-while [ -s $selected_stm ]
-do
-	while read streamer
-	do
-		nohup mpv --mute=yes -ytdl https://www.twitch.tv/$streamer &> /dev/null
-	done < "$selected_stm"
-	sxiv -tpqob * > "$selected_stm"
 done
+wait
+
+cd $thumdir
+sxiv -obtp * > $selected
+
+while read s
+do
+	mpv --mute=yes -ytdl https://www.twitch.tv/$s &> /dev/null
+done < $selected
