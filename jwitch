@@ -11,41 +11,20 @@ then
 	exit 0
 fi
 
-if [ -d "$onlivedir" ]
-then
-	rm -rf "$onlivedir"
-	mkdir "$onlivedir"
-else 
-	mkdir "$onlivedir"
-fi
-
-if [ -d "$thumbnail_list" ]
-then
-	rm -fr "$thumbnail_list"
-	mkdir "$thumbnail_list"
-else 
-	mkdir "$thumbnail_list"
-fi
+for dir in $onlivedir $thumbnail_list
+do
+	if [ -d $dir ]
+	then
+		rm -fr $dir
+		mkdir $dir
+	else
+		mkdir $dir
+	fi
+done
 
 curl_stream_from_file() {
 	file_name="$onlivedir/$1.json"
 	curl -s -X GET 'https://api.twitch.tv/helix/search/channels?query='$1'&first=1' \
-		-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
-		-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' | jq '.' \
-		> $file_name 
-
-	is_live=$(grep "is_live" $file_name | awk '{ print $2 }' | sed 's/[, ]//g')
-	if [ "$is_live" = "true" ]
-	then 
-		echo $1 is live
-		thumbnail=$(grep "thumbnail_url" $file_name | awk '{ print $2 }' | sed 's/[," ]//g')
-		wget -q "$thumbnail" -O "$thumbnail_list$1"
-	fi
-}
-
-curl_top_stream_fr() {
-	file_name="$onlivedir/$1.json"
-	curl -s -X GET 'https://api.twitch.tv/helix/streams?language=fr&first=20' \
 		-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
 		-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' | jq '.' \
 		> $file_name 
