@@ -37,7 +37,7 @@ do
 	if [ $live = "true" ]
 	then
 		link=$(cat $jsondir/$file | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[" ,]//g')
-		wget "$link" -O "$thumdir/$file" &
+		wget -q "$link" -O "$thumdir/$file" &
 	fi
 done
 wait
