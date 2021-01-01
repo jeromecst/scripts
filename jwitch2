@@ -1,34 +1,42 @@
 #!/bin/sh 
 
+topstreams="/tmp/jwitch2/topstreams.js"
+names="/tmp/jwitch2/names"
+thumblink="/tmp/jwitch2/links"
+thumbdir="/tmp/jwitch2/thumbs"
+maindir="/tmp/jwitch2"
+selected="/tmp/jwitch2/selected"
+
+for dir in $maindir $thumbdir
+do
+	if [ -d $dir ]
+	then
+		rm -fr $dir/*
+	else
+		mkdir $dir
+	fi
+done
+
 curl -s -X GET 'https://api.twitch.tv/helix/streams?language=fr&first=10' \
 	-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
-	-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' > /tmp/topstreams
+	-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' > $topstreams
 
-cat /tmp/topstreams | jq '.' | grep "user_name" | awk '{ print $2 }' | sed 's/[", ]//g' > /tmp/namestreams
-cat /tmp/topstreams | jq '.' | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[", ]//g' | sed 's/{width}/1920/g' | sed 's/{height}/1080/g' > /tmp/thumblink
+cat $topstreams | jq '.' | grep "user_name" | awk '{ print $2 }' | sed 's/[", ]//g' > $names
+cat $topstreams | jq '.' | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[", ]//g' | sed 's/{width}/1920/g' | sed 's/{height}/1080/g' > $thumblink
 
-nb=$(wc -l /tmp/namestreams | awk '{ print $1}')
-
-if [ -d /tmp/thumb/ ]
-then
-	rm -fr /tmp/thumb/
-	mkdir /tmp/thumb/
-else
-	mkdir /tmp/thumb/
-fi
+nb=$(wc -l $names | awk '{ print $1}')
 
 for i in $(seq $nb)
 do
-	link=$(sed -n ""$i"p" < /tmp/thumblink)
-	name=$(sed -n ""$i"p" < /tmp/namestreams)
-
-	wget -q "$link" -O "/tmp/thumb/$name"
+	link=$(sed -n ""$i"p" < $thumblink)
+	name=$(sed -n ""$i"p" < $names)
+	wget -q "$link" -O "$thumbdir/$name"
 done
 
-cd /tmp/thumb
-cat /tmp/namestreams | sxiv -oitp  > /tmp/names
+cd $thumbdir
+cat $names | sxiv -oitp  > $selected
 
 while read l
 do
 	mpv --mute=yes "https://www.twitch.tv/$l" &> /dev/null
-done < /tmp/names
+done < $selected
