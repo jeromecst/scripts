@@ -1,6 +1,6 @@
 #!/bin/sh 
 
-curl -s -X GET 'https://api.twitch.tv/helix/streams?language=fr&first=20' \
+curl -s -X GET 'https://api.twitch.tv/helix/streams?language=fr&first=10' \
 	-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
 	-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' > /tmp/topstreams
 
