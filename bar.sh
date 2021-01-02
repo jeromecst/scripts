@@ -101,7 +101,6 @@ init () {
 	update=1
 	k=-1
 
-	get_bandwidth wlan0
 	get_disk
 	mute
 	get_date
@@ -130,7 +129,7 @@ update_case () {
 }
 
 main_battery (){
-	for i in $(seq 1000); do
+	while true; do
 		update_case
 		if [ $(($k%50)) -eq 0 ]; then
 			get_temp
@@ -139,7 +138,7 @@ main_battery (){
 			update=1
 		fi
 		if [ "$update" -eq 1 ];then
-			bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
+			bar=" $disk - $temp - $volume - $network - $battery - $time - $date "
 			xsetroot -name "$bar"
 			update=0
 		fi
@@ -148,7 +147,7 @@ main_battery (){
 }
 
 main_no_battery (){
-	for i in $(seq 1000); do
+	while true; do
 		update_case
 		if [ $(($k%50)) -eq 0 ]; then
 			get_temp
@@ -156,7 +155,7 @@ main_no_battery (){
 			update=1
 		fi
 		if [ "$update" -eq 1 ];then
-			bar=" $disk | $temp | $volume | $network | $time | $date "
+			bar=" $disk - $temp - $volume - $network - $time - $date "
 			xsetroot -name "$bar"
 			update=0
 		fi
