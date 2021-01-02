@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # dwm status bar
 # see https://github.com/stark/siji for more and free icons
 # and https://www.nerdfonts.com/
 
-# may improve performance, needs tests tho
+# does improve performance very lightly 
 LC_ALL=C
 LANG=C
 
@@ -105,67 +105,75 @@ get_temp () {
 }
 
 get_disk () {
-	disk=" $(df -h | grep -w / | awk ' { print $4 }')"
+	disk=" $(df -h | grep -w / | awk ' { print $4 }')" 
 }
 
 
-device_temp=$(cat /sys/class/thermal/thermal_zone*/type | grep -n x86 | sed 's/:x86.*//g')
-device_temp=$(($device_temp - 1))
+init () {
+	device_temp=$(cat /sys/class/thermal/thermal_zone*/type | grep -n x86 | sed 's/:x86.*//g')
+	device_temp=$(($device_temp - 1))
 
 
-if [ -f "/sys/class/power_supply/BAT0/status" ];then 
-	display_battery=1
-else
-	display_battery=0
-fi
-
-trap "get_volume" 10
-trap "mute" 34
-
-pactl set-sink-mute @DEFAULT_SINK@ 0
-muted=0
-update=1 # a boolean
-k=-1
-
-get_disk
-get_volume
-get_date
-get_time
-
-while true; do
-	k=$(($k+1))
-	case $k in 
-		0)
-			get_date
-			get_time
-			update=1
-			;;
-		300) 
-			get_disk
-			update=1
-			;;
-		600)
-			k=-1
-			;;
-	esac
-	if [ $(($k%50)) -eq 0 ]; then
-		get_temp
-		get_network
-		update=1
+	if [ -f "/sys/class/power_supply/BAT0/status" ];then 
+		display_battery=1
+	else
+		display_battery=0
 	fi
-	if [ $update -eq 1 ];then
-		case $display_battery in 
-			1)
-				get_battery
-				bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
-				;;
+
+	trap "get_volume" 10
+	trap "mute" 34
+
+	pactl set-sink-mute @DEFAULT_SINK@ 0
+	muted=0
+	update=1
+	k=-1
+
+	get_disk
+	get_volume
+	get_date
+	get_time
+}
+
+
+main () {
+	for i in $(seq 1000); do
+		k=$(($k+1))
+		case $k in 
 			0)
-				bar=" $disk | $temp | $volume | $network | $time | $date "
+				get_date
+				get_time
+				update=1
+				;;
+			300) 
+				get_disk
+				update=1
+				;;
+			600)
+				k=-1
 				;;
 		esac
-		xsetroot -name "$bar"
-		update=0
-	fi
+		if [ $(($k%50)) -eq 0 ]; then
+			get_temp
+			get_network
+			update=1
+		fi
+		if [ "$update" -eq 1 ];then
+			case $display_battery in 
+				1)
+					get_battery
+					bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
+					;;
+				0)
+					bar=" $disk | $temp | $volume | $network | $time | $date "
+					;;
+			esac
+			xsetroot -name "$bar"
+			update=0
+		fi
 
-	sleep .1
-done
+		sleep .1
+	done
+}
+
+init
+main

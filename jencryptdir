@@ -81,4 +81,3 @@ done < $file_of_dir
 
 rm $file_of_dir $files_to_encrypt -f
 printf "\n"
-
