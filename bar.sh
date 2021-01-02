@@ -8,23 +8,9 @@
 LC_ALL=C
 LANG=C
 
-get_bandwidth () {
-	while true
-	do
-		line=$(grep $1 /proc/net/dev | sed s/.*://)
-		down=$(echo $line | awk '{print $1}')
-		up=$(echo $line | awk '{print $9}')
-		sleeptime=2
-		sleep $sleeptime
-		line=$(grep $1 /proc/net/dev | sed s/.*://)
-		down2=$(echo $line | awk '{print $1}')
-		up2=$(echo $line | awk '{print $9}')
-		dlspeed=$((($down2 - $down)/(1000*$sleeptime) ))
-		upspeed=$((($up2 - $up)/(1000*$sleeptime) ))
-		echo $dlspeed > /tmp/dlspeed
-		echo $upspeed > /tmp/upspeed
-	done&
-}
+# handle signal
+trap "get_volume" 10
+trap "mute" 34
 
 get_network () {
 	network_name=$( iwctl station wlan0 show | grep "Connected network" | awk '{ print $3 }' )
@@ -35,12 +21,6 @@ get_network () {
 	else
 		network=" $network_name"
 	fi
-}
-
-get_network_speed() {
-	dlspeed=$(cat /tmp/dlspeed)
-	upspeed=$(cat /tmp/upspeed)
-	nspeed=" $dlspeed/$upspeed kB/s"
 }
 
 get_time () {
@@ -54,12 +34,11 @@ get_date () {
 }
 
 get_volume () {
-	if [ $muted -eq 0 ]
+	if [ "$muted" = "no" ]
 	then
-		volume=$(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|,]//g')
-		volume=" $volume%"
+		volume=" $(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|, ]//g')%"
+		update=1
 	fi
-	update=1
 }
 
 get_battery () {
@@ -84,11 +63,10 @@ get_weather () {
 }
 
 mute () {
-	if [ $muted -eq 0 ]; then
-		muted=1
+	muted=$(pacmd list-sinks | grep mute | awk '{ print $2 }')
+	if [ $muted = "yes" ]; then
 		volume=""
 	else
-		muted=0
 		get_volume
 	fi
 	update=1
@@ -113,67 +91,83 @@ init () {
 	device_temp=$(cat /sys/class/thermal/thermal_zone*/type | grep -n x86 | sed 's/:x86.*//g')
 	device_temp=$(($device_temp - 1))
 
-
-	if [ -f "/sys/class/power_supply/BAT0/status" ];then 
+	if [ -f "/sys/class/power_supply/BAT0/status" ]
+	then 
 		display_battery=1
 	else
 		display_battery=0
 	fi
 
-	trap "get_volume" 10
-	trap "mute" 34
-
-	pactl set-sink-mute @DEFAULT_SINK@ 0
-	muted=0
 	update=1
 	k=-1
 
+	get_bandwidth wlan0
 	get_disk
-	get_volume
+	mute
 	get_date
 	get_time
 }
 
+update_case () {
+	k=$(($k+1))
+	case $k in 
+		0)
+			get_date
+			update=1
+			;;
+		150)
+			get_time
+			update=1
+			;;
+		300) 
+			get_disk
+			update=1
+			;;
+		600)
+			k=-1
+			;;
+	esac
+}
 
-main () {
+main_battery (){
 	for i in $(seq 1000); do
-		k=$(($k+1))
-		case $k in 
-			0)
-				get_date
-				get_time
-				update=1
-				;;
-			300) 
-				get_disk
-				update=1
-				;;
-			600)
-				k=-1
-				;;
-		esac
+		update_case
+		if [ $(($k%50)) -eq 0 ]; then
+			get_temp
+			get_battery
+			get_network
+			update=1
+		fi
+		if [ "$update" -eq 1 ];then
+			bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
+			xsetroot -name "$bar"
+			update=0
+		fi
+		sleep .1
+	done
+}
+
+main_no_battery (){
+	for i in $(seq 1000); do
+		update_case
 		if [ $(($k%50)) -eq 0 ]; then
 			get_temp
 			get_network
 			update=1
 		fi
 		if [ "$update" -eq 1 ];then
-			case $display_battery in 
-				1)
-					get_battery
-					bar=" $disk | $temp | $volume | $network | $battery | $time | $date "
-					;;
-				0)
-					bar=" $disk | $temp | $volume | $network | $time | $date "
-					;;
-			esac
+			bar=" $disk | $temp | $volume | $network | $time | $date "
 			xsetroot -name "$bar"
 			update=0
 		fi
-
 		sleep .1
 	done
 }
 
 init
-main
+case $display_battery in
+	1)
+		main_battery;;
+	0)
+		main_no_battery;;
+esac
