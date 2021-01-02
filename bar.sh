@@ -22,7 +22,7 @@ get_network () {
 }
 
 get_time () {
-	time="$( date +"%H:%M" )"
+	time=" $( date +"%H:%M" )"
 }
 
 get_date () {
