@@ -1,8 +1,6 @@
 #!/bin/sh -e
 
 # dwm status bar
-# see https://github.com/stark/siji for more and free icons
-# and https://www.nerdfonts.com/
 
 # does improve performance very lightly 
 LC_ALL=C
@@ -24,13 +22,11 @@ get_network () {
 }
 
 get_time () {
-	time=$( date +"%H:%M" )
-	time=" $time" 
+	time="$( date +"%H:%M" )"
 }
 
 get_date () {
-	date=$( date +"%d %b %Y" )
-	date=" $date" 
+	date=" $( date +"%d %b %Y" )"
 }
 
 get_volume () {
