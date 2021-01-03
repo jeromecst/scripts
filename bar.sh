@@ -34,6 +34,7 @@ get_date () {
 }
 
 get_volume () {
+	echo $muted
 	if [ "$muted" = "no" ]
 	then
 		volume=" $(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|, ]//g')%"
@@ -103,6 +104,7 @@ init () {
 
 	get_disk
 	mute
+	get_volume
 	get_date
 	get_time
 }
