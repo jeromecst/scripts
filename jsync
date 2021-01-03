@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if ping -c 1 -W 1 jservlocal > /dev/null
-then
-	rsync -arv --progress --delete -e ssh jserv@jservlocal:/home/jserv/ /home/$USER/.jserv/ --files-from=/home/$USER/.config/jsync-rsync --exclude ".*/"
-else
-	rsync -arv --progress --delete -e ssh jserv@jserv:/home/jserv/ /home/$USER/.jserv/ --files-from=/home/$USER/.config/jsync-rsync --exclude ".*/"
-fi

@@ -3,9 +3,6 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-* you can install all scripts by executing `./install.sh`
-
-
 ### jdecryptdir
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
@@ -59,7 +56,7 @@ _example of output :_
 2019-08-13@14:09:44 --> 158.69.212.XXX <-- Canada | Montreal <new>
 ```
 
-usage : `ssh_connection`
+usage : `ssh_connection.sh`
 
 ### bd
 
