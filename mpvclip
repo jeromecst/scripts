@@ -5,5 +5,5 @@
 #	- xclip
 
 LINK=$(xclip -selection c -o)
-echo Streaming $LINK $(date) 
-mpv $LINK #&>/dev/null 2>&1 &
+echo Streaming $LINK
+nohup mpv $LINK &>/dev/null 2>&1 &

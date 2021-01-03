@@ -1,0 +1,12 @@
+#!/bin/bash
+
+date=$(date +%d-%m-%y)
+
+configpath="/home/jserv/config/"
+
+if ping -c 1 -W 1 jservlocal
+then
+	rsync -ahzv --progress --delete / -e ssh  jserv@jservlocal:$configpath --files-from=/home/jerome/.config/jsaveconfig --delete
+else
+	rsync -ahzv --progress --delete / -e ssh jserv@jserv:$configpath --files-from=/home/jerome/.config/jsaveconfig --delete
+fi

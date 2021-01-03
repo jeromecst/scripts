@@ -26,7 +26,6 @@ while [ $# -ge 1 ]; do
 	shift
 done
 
-
 decrypt_dir () {
 	cd "$line"
 	find . -type f -name "*.gpg" -maxdepth 1 > $file_of_gpg_files
