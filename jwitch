@@ -4,7 +4,7 @@
 #	- mpv
 #	- sxiv
 
-if [ -z $CLIENTID -o -z $BEARERKEY ]
+if [ -z "$CLIENTID" -o -z "$BEARERKEY" ]
 then
 	echo "No key provided, can't curl the api"
 	exit 0
