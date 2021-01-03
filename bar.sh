@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh
 
 # dwm status bar
 # requirements
