@@ -7,25 +7,25 @@ Useful scripts to enhance your Linux experience
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
 
-usage : `jdecryptdir -p folder/`
+usage : `jdecryptdir pictures/`
 
 _example of output :_
 
 ```
-➜  ~ jdecryptdir -p pictures 
-decrypting pictures...
-[+] pictures/IMG_20190826_110611.jpg.gpg
-[+] pictures/IMG_20190826_110624.jpg.gpg
-[+] pictures/IMG_20190826_110626.jpg.gpg
-[+] pictures/IMG_20190826_110707.jpg.gpg
-[+] pictures/IMG_20190826_110628.jpg.gpg
-[+] pictures/IMG_20190826_110711.jpg.gpg
-[+] pictures/IMG_20190826_110609.jpg.gpg
-[+] pictures/IMG_20190826_214215.jpg.gpg
-[+] pictures/IMG_20190826_110612.jpg.gpg
-[+] pictures/IMG_20190826_110635.jpg.gpg
-[+] pictures/IMG_20190826_110634.jpg.gpg
-done
+➜  ~ jdecryptdir pictures 
+no user provided, using jerome by default
+looking for gpg files in /home/jerome/pictures
+
+	entering /home/jerome/pictures
+		[-] 20:10:23 : decrypting 20190728_0001.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190728_0005.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190729_0003.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190729_0002.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190813_0008.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190813_0006.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190813_0009.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190813_0002.jpg.gpg ✓
+		[-] 20:10:26 : decrypting 20190728_0007.jpg.gpg ✓
 ```
 
 ### ssh_connection

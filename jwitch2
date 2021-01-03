@@ -1,4 +1,8 @@
-#!/bin/sh 
+#!/bin/sh -e
+
+# requirements
+#	- mpv
+#	- sxiv
 
 if [ -z $CLIENTID -o -z $BEARERKEY ]
 then

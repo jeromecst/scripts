@@ -1,8 +1,12 @@
 #!/bin/sh -e
 
 # dwm status bar
+# requirements
+#	- dwm
+#	- iw
+#	- sending signals 10 & 34 when changing volume/mute
 
-# does improve performance very lightly 
+# does improve performance very slightly 
 LC_ALL=C
 LANG=C
 
