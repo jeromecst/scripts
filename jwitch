@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ -z $CLIENTID -o -z $BEARERKEY ]
+then
+	echo "No key provided, can't curl the api"
+	exit 0
+fi
+
 configfile="$HOME/.config/jwitch/config"
 maindir="/tmp/jwitch"
 jsondir="$maindir/json"
@@ -24,9 +30,9 @@ done
 
 while read l
 do
-	curl -s -X GET 'https://api.twitch.tv/helix/search/channels?query='$l'&first=1' \
-		-H 'client-id: z0414km6y5haw5tlapo5wnhsjymojb' \
-		-H 'Authorization: Bearer 8uv2771xvwibmys7xqd885c25d0xs5' | jq '.' \
+	curl -s -X GET "https://api.twitch.tv/helix/search/channels?query=$l&first=1" \
+		-H "client-id: $CLIENTID" \
+		-H "Authorization: Bearer $BEARERKEY" | jq '.' \
 		> $jsondir/$l &
 done < $configfile
 wait
