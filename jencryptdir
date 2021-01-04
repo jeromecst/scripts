@@ -30,7 +30,7 @@ encrypt_dir () {
 	cd "$line"
 	find . -type f -not -name "*.gpg" -maxdepth 1 > $files_to_encrypt
 	if [ ! -s $files_to_encrypt ]; then
-		printf " : no file to decrypt\n"
+		printf " : no file to encrypt\n"
 	else
 		printf "\n"
 	fi
@@ -47,11 +47,15 @@ encrypt_dir () {
 			printf "can't find encrypted file, can't rm original file, exiting...\n"
 			exit 1
 		else
-			shred "$file" -f -n 1
-			rm "$file"
+			shred "$file" -f -n 1 &
 		fi
 		printf " ✓\n"
 	done < $files_to_encrypt
+	wait
+	while read file
+	do
+		rm $file
+	done < $files_to_encrypt &
 }
 
 if [ -z $path ]
