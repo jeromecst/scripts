@@ -1,10 +1,14 @@
 #!/bin/sh
 
-awk  '{print $2}' /home/jerome/.jserv/notes/bd.md >> /tmp/bd
-for n in '0' '1' '2' '3' '4' '5' '6' '7'
+file=$HOME/archive/notes/bd.md
+
+sed "s/.*|' '?//g" $file > .cache/bd
+sed "s/|.*//g" archive/notes/bd.md > .cache/bdname
+
+for n in $(seq 7)
 do
 	cur_date="$(date -d "+$n days" +%d/%m)"
-	if cat /tmp/bd | grep "$cur_date" > /dev/null; then
+	if grep "$cur_date" /tmp/bd > /dev/null; then
 		line="$(grep -n "$cur_date" /tmp/bd | cut -d : -f 1)"
 		name="$(cat /home/jerome/.jserv/notes/bd.md | grep "$cur_date" | cut -d ' ' -f 1)"
 		if [ "$n" == "0" ]
