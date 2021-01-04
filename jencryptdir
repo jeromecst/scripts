@@ -70,7 +70,7 @@ fi
 cd $path
 path=$(pwd)
 printf "looking for files $path\n\n"
-find $path -type d > $file_of_dir
+find $path/ -type d > $file_of_dir
 while read line
 do
 	printf "	entering $line"
