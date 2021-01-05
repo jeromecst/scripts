@@ -1,8 +1,16 @@
 #!/bin/sh -e
 
 export GPG_TTY=$(tty)
-file_of_dir="/tmp/jencryptdirs"
-files_to_encrypt="/tmp/jencryptedgpgfiles"
+maindir="/tmp/jencryptdir"
+file_of_dir="$maindir/jencryptdirs"
+files_to_encrypt="$maindir/jencryptedgpgfiles"
+
+if [ -d $maindir ]
+then
+	rm $maindir/* -rf
+else
+	mkdir $maindir
+fi
 
 while [ $# -ge 1 ]; do
 	case "${1}" in
@@ -29,8 +37,11 @@ done
 encrypt_dir () {
 	cd "$line"
 	find . -type f -not -name "*.gpg" -maxdepth 1 > $files_to_encrypt
+	id="$files_to_encrypt.$(sha1sum $files_to_encrypt | awk '{ printf $1 }')"
+	cp $files_to_encrypt $id &
 	if [ ! -s $files_to_encrypt ]; then
 		printf " : no file to encrypt\n"
+		return
 	else
 		printf "\n"
 	fi
@@ -55,7 +66,7 @@ encrypt_dir () {
 	while read file
 	do
 		rm "$file"
-	done < $files_to_encrypt &
+	done < $id &
 }
 
 if [ -z $path ]
@@ -82,5 +93,5 @@ do
 	encrypt_dir
 done < $file_of_dir
 
-rm $file_of_dir $files_to_encrypt -f
+rm $maindir/* -fr
 printf "\n"
