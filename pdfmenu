@@ -8,7 +8,7 @@ else
 	DMENU="$DMENU -l 20"
 fi
 pdf_file=$(find $HOME/ -not -path '*/[@.]*' -type f -name "*.pdf" | $DMENU -p "Zathura")
-if [ ! $pdf_file = "" ]
+if [ ! "$pdf_file" = "" ]
 then
-	$pdf_viewer $pdf_file
+	$pdf_viewer "$pdf_file" &
 fi
