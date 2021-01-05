@@ -51,12 +51,12 @@ encrypt_dir () {
 		encrypted_file="$file".gpg
 		if [ "$encrypted_file" = "$file" ]; then
 			printf "name file error, exiting...\n"
-			exit 1
+			exit 0
 		fi
 		gpg  -r $userID -o "$encrypted_file" --yes --encrypt "$file" > /dev/null 2>&1
 		if [ ! -f "$encrypted_file" ]; then
 			printf "can't find encrypted file, can't rm original file, exiting...\n"
-			exit 1
+			exit 0
 		else
 			shred "$file" -f -n 1 &
 		fi
@@ -93,5 +93,6 @@ do
 	encrypt_dir
 done < $file_of_dir
 
+wait
 rm $maindir/* -fr
 printf "\n"
