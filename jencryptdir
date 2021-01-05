@@ -54,7 +54,7 @@ encrypt_dir () {
 	wait
 	while read file
 	do
-		rm $file
+		rm "$file"
 	done < $files_to_encrypt &
 }
 
