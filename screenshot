@@ -2,15 +2,15 @@
 
 # requirements : 
 #	- xclip
-#	- maim
+#	- imagemagisk
 #	- sxiv
 #	- dmenu
 
 if [ -n "$1" ]
 then 
-	maim_command="maim -s"
+	screeshot="import"
 else
-	maim_command="maim"
+	screeshot="import -window"
 fi
 
 if [ -z "$DMENU" ] 
@@ -28,7 +28,7 @@ case $search in
 		if [ -z $name_file ]; then
 			name_file=$(date +%F-%T)
 		fi
-		$maim_command > $HOME/$name_file.png
+		$screeshot $HOME/$name_file.png
 		;;
 	Pin)
 		name_file=$(date +%F-%T)
@@ -37,14 +37,14 @@ case $search in
 			mkdir /tmp/screenshot
 		fi
 		file=/tmp/screenshot/$name_file.png
-		$maim_command > $file
+		$screeshot $file
 		sxiv -b -p $file &
 		break
 		;;
 	Gimp)
 		name_file=$(date +%F-%T)
 		file=/tmp/$name_file.png
-		$maim_command > $file
+		$screeshot $file
 		if [ -e $file ]; then
 			echo $file exists
 			gimp $file &
@@ -52,7 +52,10 @@ case $search in
 		break
 		;;
 	Clipboard)
-		$maim_command | xclip -selection clipboard -t image/png
+		name_file=$(date +%F-%T)
+		file=/tmp/$name_file.png
+		$screeshot $file 
+		xclip -selection clipboard -t image/png -i $file
 		break
 		;;
 esac
