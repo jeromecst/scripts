@@ -99,6 +99,7 @@ init () {
 		display_battery=0
 	fi
 
+	pactl set-sink-mute @DEFAULT_SINK@ 0
 	update=1
 	k=-1
 
