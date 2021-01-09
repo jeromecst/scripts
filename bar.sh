@@ -3,7 +3,7 @@
 # dwm status bar
 # requirements
 #	- dwm
-#	- iw
+#	- iwd
 #	- sending signals 10 & 34 when changing volume/mute
 
 # does improve performance very slightly 
