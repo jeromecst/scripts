@@ -79,7 +79,7 @@ then
 	exit 0
 fi
 
-if [ -z $userID ]
+if [ -z "$userID" ]
 then
 	userID="$USER"
 	printf "no user provided, using $USER by default\n"

@@ -26,6 +26,23 @@ while [ $# -ge 1 ]; do
 	shift
 done
 
+decrypt_file () {
+	printf "		[-] $(date +%T) : decrypting $(printf "$1" | sed 's/.\///')"
+	decryptedfile=$( printf "$1" | sed 's/.gpg//g')
+	if [ "$decryptedfile" = "$1" ]; then
+		printf "name file error, exiting...\n"
+		exit 1
+	fi
+	gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1" >/dev/null 2>&1
+	if [ ! -f "$decryptedfile" ]; then
+		printf "can't find decrypted file, can't rm original file, exiting...\n"
+		exit 1
+	else
+		rm "$1"
+	fi
+	printf " ✓\n"
+}
+
 decrypt_dir () {
 	cd "$line"
 	find . -type f -name "*.gpg" -maxdepth 1 > $file_of_gpg_files
@@ -36,46 +53,38 @@ decrypt_dir () {
 	fi
 	while read file
 	do
-		printf "		[-] $(date +%T) : decrypting $(printf "$file" | sed 's/.\///')"
-		decryptedfile=$( printf "$file" | sed 's/.gpg//g')
-		if [ "$decryptedfile" = "$file" ]; then
-			printf "name file error, exiting...\n"
-			exit 1
-		fi
-		gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$file" >/dev/null 2>&1
-		if [ ! -f "$decryptedfile" ]; then
-			printf "can't find decrypted file, can't rm original file, exiting...\n"
-			exit 1
-		else
-			rm "$file"
-		fi
-		printf " ✓\n"
+		decrypt_file $file
 	done < $file_of_gpg_files
 }
 
-if [ -z $path ]
+if [ -z "$path" ]
 then
-	printf "Please specify a folder\n"
+	printf "Please specify a folder or a file\n"
 	exit 0
 fi
 
-if [ -z $userID ]
+if [ -z "$userID" ]
 then
 	userID="$USER"
 	printf "no user provided, using $USER by default\n"
 fi
 
 
-cd $path
-path=$(pwd)
-printf "looking for gpg files in $path\n\n"
-find $path/ -type d > $file_of_dir
-while read line
-do
-	printf "	entering $line"
-	cd "$line"
-	decrypt_dir
-done < $file_of_dir
+if [ -f "$path" ]
+then
+	decrypt_file "$path"
+else
+	cd $path
+	path=$(pwd)
+	printf "looking for gpg files in $path\n\n"
+	find $path/ -type d > $file_of_dir
+	while read line
+	do
+		printf "	entering $line"
+		cd "$line"
+		decrypt_dir
+	done < $file_of_dir
 
-rm $file_of_dir $file_of_gpg_files -f
-printf "\n"
+	rm $file_of_dir $file_of_gpg_files -f
+	printf "\n"
+fi
