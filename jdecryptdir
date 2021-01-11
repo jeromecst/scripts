@@ -72,7 +72,14 @@ fi
 
 if [ -f "$path" ]
 then
-	decrypt_file "$path"
+	case "$path" in
+		*.gpg)
+			decrypt_file "$path"
+			;;
+		*)
+			echo "No file to decrypt"
+			;;
+	esac
 else
 	cd $path
 	path=$(pwd)

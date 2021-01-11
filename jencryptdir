@@ -87,8 +87,15 @@ fi
 
 if [ -f "$path" ]
 then
-	encrypt_file "$path"
-	rm "$path"
+	case $path in
+		*.gpg)
+			echo "No file to encrypt"
+			;;
+		*)
+			encrypt_file "$path"
+			rm "$path"
+			;;
+	esac
 else
 	cd $path
 	path=$(pwd)
