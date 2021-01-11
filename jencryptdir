@@ -34,6 +34,23 @@ while [ $# -ge 1 ]; do
 	shift
 done
 
+encrypt_file () {
+	printf "		[+] $(date +%T) : encrpyting $(printf "$1" | sed 's/.\///')"
+	encrypted_file="$1".gpg
+	if [ "$encrypted_file" = "$1" ]; then
+		printf "name file error, exiting...\n"
+		exit 0
+	fi
+	gpg  -r $userID -o "$encrypted_file" --yes --encrypt "$1" > /dev/null 2>&1
+	if [ ! -f "$encrypted_file" ]; then
+		printf "can't find encrypted file, can't rm original file, exiting...\n"
+		exit 0
+	else
+		shred "$1" -f -n 1 &
+	fi
+	printf " ✓\n"
+}
+
 encrypt_dir () {
 	cd "$line"
 	find . -type f -not -name "*.gpg" -maxdepth 1 > $files_to_encrypt
@@ -47,20 +64,7 @@ encrypt_dir () {
 	fi
 	while read file
 	do
-		printf "		[+] $(date +%T) : encrpyting $(printf "$file" | sed 's/.\///')"
-		encrypted_file="$file".gpg
-		if [ "$encrypted_file" = "$file" ]; then
-			printf "name file error, exiting...\n"
-			exit 0
-		fi
-		gpg  -r $userID -o "$encrypted_file" --yes --encrypt "$file" > /dev/null 2>&1
-		if [ ! -f "$encrypted_file" ]; then
-			printf "can't find encrypted file, can't rm original file, exiting...\n"
-			exit 0
-		else
-			shred "$file" -f -n 1 &
-		fi
-		printf " ✓\n"
+		encrypt_file "$file"
 	done < $files_to_encrypt
 	wait
 	while read file
@@ -69,9 +73,9 @@ encrypt_dir () {
 	done < $id &
 }
 
-if [ -z $path ]
+if [ -z "$path" ]
 then
-	printf "Please specify a folder\n"
+	printf "Please specify a folder or a file\n"
 	exit 0
 fi
 
@@ -81,18 +85,23 @@ then
 	printf "no user provided, using $USER by default\n"
 fi
 
+if [ -f "$path" ]
+then
+	encrypt_file "$path"
+	rm "$path"
+else
+	cd $path
+	path=$(pwd)
+	printf "looking for files $path\n\n"
+	find $path/ -type d > $file_of_dir
+	while read line
+	do
+		printf "	entering $line"
+		cd "$line"
+		encrypt_dir
+	done < $file_of_dir
 
-cd $path
-path=$(pwd)
-printf "looking for files $path\n\n"
-find $path/ -type d > $file_of_dir
-while read line
-do
-	printf "	entering $line"
-	cd "$line"
-	encrypt_dir
-done < $file_of_dir
-
-wait
-rm $maindir/* -fr
-printf "\n"
+	wait
+	rm $maindir/* -fr
+	printf "\n"
+fi
