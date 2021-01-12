@@ -3,11 +3,16 @@
 #	- xclip
 #	- dmenu
 
-if [ -z "$BROWSER" ]
-then 
-	browser="qutebrowser"
+if [ -n "$1" ]
+then
+	browser="$1"
 else
-	browser=$BROWSER
+	if [ -n "$BROWSER" ]
+	then 
+		browser="$BROWSER"
+	else
+		browser="firefox"
+	fi
 fi
 
 if [ -z "$DMENU" ] 

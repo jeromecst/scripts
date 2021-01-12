@@ -3,6 +3,7 @@
 bar.sh&
 redshift&
 hsetroot -fill $HOME/.wallpaper& 
+sudo chown jerome /sys/class/backlight/intel_backlight/brightness
 if [ ! -d $HOME/.config/alacritty ]
 then
 	mkdir $HOME/.config/alacritty/
