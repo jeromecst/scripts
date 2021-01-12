@@ -36,7 +36,7 @@ fi
 # if input contains a dot or : and doesn't contain a space: suppose it's a link
 if echo "$input" | grep "\\.\|:" | grep -v ' '
 then
-	$browser "$input"
+	eval $browser \"$input\"
 	exit 0
 fi
 
@@ -57,10 +57,8 @@ then
 			exit 0
 		fi
 	fi
-	echo $link
 	link=$(echo "$link" | sed "s/{}/$search/")
-	echo $link
-	$browser "$link" &
+	eval $browser \"$link\" &
 else
-	$browser "$link" &
+	eval $browser \"$link\" &
 fi
