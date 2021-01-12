@@ -7,7 +7,7 @@ if [ -z "$BROWSER" ]
 then 
 	browser="qutebrowser"
 else
-	browser="$BROWSER"
+	browser=$BROWSER
 fi
 
 if [ -z "$DMENU" ] 
@@ -55,7 +55,7 @@ then
 	echo $link
 	link=$(echo "$link" | sed "s/{}/$search/")
 	echo $link
-	$browser "$link"
+	$browser "$link" &
 else
 	$browser "$link" &
 fi
