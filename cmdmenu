@@ -7,5 +7,5 @@ fi
 app=$(cat $HOME/.config/apps | $DMENU -p "exec")
 if [ ! -z "$app" ]
 then
-	alacritty -e $app &
+	$TERMINAL -e $app &
 fi

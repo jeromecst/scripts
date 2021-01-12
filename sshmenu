@@ -7,5 +7,5 @@ fi
 host=$(cat .ssh/config | grep "Host " | awk '{ print $2}' | $DMENU -p "ssh" )
 if [ ! -z "$host" ]
 then
-	alacritty -e ssh $host &
+	$TERMINAL -e ssh $host &
 fi
