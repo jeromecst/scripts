@@ -13,6 +13,12 @@ LANG=C
 # handle signal
 trap "get_volume" 10
 trap "mute" 34
+trap "update" 12
+
+update () {
+	echo updating...
+	update=1
+}
 
 get_network () {
 	network_name=$( iwctl station wlan0 show | grep "Connected network" | awk '{ print $3 }' )
@@ -115,15 +121,15 @@ update_case () {
 	case $k in 
 		0)
 			get_date
-			update=1
+			update
 			;;
 		150)
 			get_time
-			update=1
+			update
 			;;
 		300) 
 			get_disk
-			update=1
+			update
 			;;
 		600)
 			k=-1
@@ -138,7 +144,7 @@ main_battery (){
 			get_temp
 			get_battery
 			get_network
-			update=1
+			update
 		fi
 		if [ "$update" -eq 1 ];then
 			bar=" $disk - $temp - $volume - $network - $battery - $time - $date "
@@ -155,7 +161,7 @@ main_no_battery (){
 		if [ $(($k%50)) -eq 0 ]; then
 			get_temp
 			get_network
-			update=1
+			update
 		fi
 		if [ "$update" -eq 1 ];then
 			bar=" $disk - $temp - $volume - $network - $time - $date "
