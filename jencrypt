@@ -93,6 +93,7 @@ then
 			;;
 		*)
 			encrypt_file "$path"
+			wait
 			rm "$path"
 			;;
 	esac
