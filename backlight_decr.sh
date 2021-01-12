@@ -1,7 +1,7 @@
 #!/bin/sh
 
 folder="/sys/class/backlight/intel_backlight"
-decr=500
+decr=3000
 min_br=1
 curr_br=$(cat $folder/brightness)
 new_br=$(( $curr_br - $decr ))
