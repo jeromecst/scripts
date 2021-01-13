@@ -13,12 +13,19 @@ LANG=C
 # handle signal
 trap "get_volume" 10
 trap "mute" 34
+trap "mute_mic" 35
 trap "update" 12
 
 update () {
 	echo updating...
 	update=1
 }
+
+mute_mic () {
+	mic_status
+	update
+}
+
 
 get_network () {
 	network_name=$( iwctl station wlan0 show | grep "Connected network" | awk '{ print $3 }' )
@@ -45,6 +52,15 @@ get_volume () {
 	then
 		volume=" $(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|, ]//g')%"
 		update=1
+	fi
+}
+
+mic_status() {
+	if [ -n "$(pactl list sources | grep "Mute: yes")" ]
+	then
+		mic=""
+	else
+		mic=""
 	fi
 }
 
@@ -106,10 +122,12 @@ init () {
 	fi
 
 	pactl set-sink-mute @DEFAULT_SINK@ 0
+	pactl set-source-mute @DEFAULT_SOURCE@ 0
 	update=1
 	k=-1
 
 	get_disk
+	mic_status
 	mute
 	get_volume
 	get_date
@@ -126,6 +144,9 @@ update_case () {
 		150)
 			get_time
 			update
+			;;
+		200)
+			mic_status
 			;;
 		300) 
 			get_disk
@@ -147,7 +168,7 @@ main_battery (){
 			update
 		fi
 		if [ "$update" -eq 1 ];then
-			bar=" $disk - $temp - $volume - $network - $battery - $time - $date "
+			bar=" $mic - $disk - $temp - $volume - $network - $battery - $time - $date "
 			xsetroot -name "$bar"
 			update=0
 		fi
@@ -164,7 +185,7 @@ main_no_battery (){
 			update
 		fi
 		if [ "$update" -eq 1 ];then
-			bar=" $disk - $temp - $volume - $network - $time - $date "
+			bar=" $mic - $disk - $temp - $volume - $network - $time - $date "
 			xsetroot -name "$bar"
 			update=0
 		fi
