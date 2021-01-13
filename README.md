@@ -3,16 +3,16 @@ Useful scripts to enhance your Linux experience
 
 ---
 
-### jdecryptdir
+### jdecrypt
 
 simple script to decrypt all `.gpg` files, recursively, in a folder.
 
-usage : `jdecryptdir pictures/`
+usage : `jdecrypt pictures/`
 
 _example of output :_
 
 ```
-➜  ~ jdecryptdir pictures 
+➜  ~ jdecrypt pictures 
 no user provided, using jerome by default
 looking for gpg files in /home/jerome/pictures
 
