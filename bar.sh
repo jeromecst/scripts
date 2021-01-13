@@ -4,7 +4,7 @@
 # requirements
 #	- dwm
 #	- iwd
-#	- sending signals 10 & 34 when changing volume/mute
+#	- sending signals 10 & 34 & 35 when changing volume/mute/mic mute
 
 # does improve performance very slightly 
 LC_ALL=C
@@ -58,9 +58,9 @@ get_volume () {
 mic_status() {
 	if [ -n "$(pactl list sources | grep "Mute: yes")" ]
 	then
-		mic=""
+		mic=""
 	else
-		mic=""
+		mic=""
 	fi
 }
 
