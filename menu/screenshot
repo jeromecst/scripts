@@ -10,7 +10,7 @@ if [ -n "$1" ]
 then 
 	screeshot="import"
 else
-	screeshot="import -window"
+	screeshot="import -window 0"
 fi
 
 if [ -z "$DMENU" ] 

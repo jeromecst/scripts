@@ -58,9 +58,9 @@ get_volume () {
 mic_status() {
 	if [ -n "$(pactl list sources | grep "Mute: yes")" ]
 	then
-		mic=""
-	else
 		mic=""
+	else
+		mic=""
 	fi
 }
 
