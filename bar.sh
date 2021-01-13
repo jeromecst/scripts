@@ -122,7 +122,7 @@ init () {
 	fi
 
 	pactl set-sink-mute @DEFAULT_SINK@ 0
-	pactl set-source-mute @DEFAULT_SOURCE@ 0
+	pactl set-source-mute @DEFAULT_SOURCE@ 1
 	update=1
 	k=-1
 
