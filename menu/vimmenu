@@ -4,8 +4,10 @@ if [ -z "$DMENU" ]
 then 
 	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 fi
-app=$(cat $HOME/.config/apps | $DMENU -p "exec")
-if [ -n "$app" ]
+
+file=$(cat $HOME/.config/vimmenu | $DMENU -p "vim")
+if [ -n "$file" ]
 then
-	$TERMINAL -e $app &
+	file=$(echo $file | sed "s|~/|$HOME/|")
+	$TERMINAL -e vim $file &
 fi
