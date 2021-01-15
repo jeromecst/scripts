@@ -147,6 +147,7 @@ update_case () {
 			;;
 		200)
 			mic_status
+			update
 			;;
 		300) 
 			get_disk

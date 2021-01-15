@@ -33,7 +33,10 @@ decrypt_file () {
 		printf "name file error, exiting...\n"
 		exit 1
 	fi
-	gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1" >/dev/null 2>&1
+	if ! gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1" >/dev/null 2>&1
+	then
+		exit 1
+	fi
 	if [ ! -f "$decryptedfile" ]; then
 		printf "can't find decrypted file, can't rm original file, exiting...\n"
 		exit 1
