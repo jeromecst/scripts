@@ -19,7 +19,7 @@ then
 fi
 search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $DMENU -p "Screenshot")
 
-case $search in
+case "$search" in
 	"")
 		exit 1
 		;;
@@ -57,5 +57,8 @@ case $search in
 		$screeshot $file 
 		xclip -selection clipboard -t image/png -i $file
 		break
+		;;
+	*)
+		$screeshot $HOME/"$search.png"
 		;;
 esac
