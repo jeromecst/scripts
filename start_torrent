@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dl_folder=$HOME/download/torrent
+link=$(xclip -o -selection clipboard)
+command="$TERMINAL -e transmission-cli -w $dl_folder/ "$link""
+eval $command
