@@ -3,17 +3,28 @@
 #	- xclip
 #	- dmenu
 
-if [ -n "$1" ]
-then
-	browser="$1"
-else
-	if [ -n "$BROWSER" ]
-	then 
-		browser="$BROWSER"
-	else
-		browser="firefox"
-	fi
-fi
+case "$1" in
+	brave)
+		browser='brave'
+		;;
+	brave-tor)
+		browser='brave --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE localhost"'
+		;;
+	firefox)
+		browser='firefox'
+		;;
+	tor)
+		browser="$HOME/download/tor-browser_en-US/Browser/./start-tor-browser --allow-remote"
+		;;
+	*)
+		if [ -n "$BROWSER" ]
+		then 
+			browser="$BROWSER"
+		else
+			browser="firefox"
+		fi
+		;;
+esac
 
 if [ -z "$DMENU" ] 
 then 
