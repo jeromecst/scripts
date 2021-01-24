@@ -33,7 +33,7 @@ decrypt_file () {
 		printf "name file error, exiting...\n"
 		exit 1
 	fi
-	if ! gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1" >/dev/null 2>&1
+	if ! eval "$decrypt_command" >/dev/null 2>&1
 	then
 		exit 1
 	fi
@@ -56,7 +56,7 @@ decrypt_dir () {
 	fi
 	while read file
 	do
-		decrypt_file $file
+		decrypt_file "$file"
 	done < $file_of_gpg_files
 }
 
@@ -66,10 +66,13 @@ then
 	exit 0
 fi
 
-if [ -z "$userID" ]
+if [ -n "$userID" ]
 then
 	userID="$USER"
-	printf "no user provided, using $USER by default\n"
+	decrypt_command='gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1"'
+else
+	printf "no user provided\n"
+	decrypt_command='gpg -o "$decryptedfile" --yes --decrypt "$1"'
 fi
 
 
