@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 export GPG_TTY=$(tty)
+file_init="/tmp/jencrypt"
 maindir="/tmp/jencryptdir"
 file_of_dir="$maindir/jencryptdirs"
 files_to_encrypt="$maindir/jencryptedgpgfiles"
@@ -12,6 +13,7 @@ else
 	mkdir $maindir
 fi
 
+printf "" > $file_init
 while [ $# -ge 1 ]; do
 	case "${1}" in
 		-p|--path)
@@ -23,11 +25,12 @@ while [ $# -ge 1 ]; do
 			shift
 			;;
 		*)
-			if [ ! -z "$path" ]; then
-				printf "unrecognized option $1\n"
-				exit 1
+			if test -f "$1" -o -d "$1"
+			then
+				echo "$(readlink -f "$1")" >> $file_init
 			else
-				path="$1"
+				printf "Can't recognize $1\nExiting...\n"
+				exit 1
 			fi
 			;;
 	esac
@@ -73,9 +76,11 @@ encrypt_dir () {
 	done < $id &
 }
 
-if [ -z "$path" ]
+if [ ! -s "$file_init" ]
 then
-	printf "Please specify a folder or a file\n"
+	printf "Please specify a folder, a file or a list of files and folders\n\n"
+	printf "Example:\n"
+	printf "jdecrypt file1.txt pictures/\n"
 	exit 0
 fi
 
@@ -85,31 +90,32 @@ then
 	printf "no user provided, using $USER by default\n"
 fi
 
-if [ -f "$path" ]
-then
-	case $path in
-		*.gpg)
-			echo "No file to encrypt"
-			;;
-		*)
-			encrypt_file "$path"
-			wait
-			rm "$path"
-			;;
-	esac
-else
-	cd $path
-	path=$(pwd)
-	printf "looking for files $path\n\n"
-	find $path/ -type d > $file_of_dir
-	while read line
-	do
-		printf "	entering $line"
-		cd "$line"
-		encrypt_dir
-	done < $file_of_dir
+while read entry
+do
+	if [ -f "$entry" ]
+	then
+		case $entry in
+			*.gpg)
+				echo "No file to encrypt"
+				;;
+			*)
+				encrypt_file "$entry"
+				wait
+				rm "$entry"
+				;;
+		esac
+	else
+		cd $entry
+		find $entry/ -type d > $file_of_dir
+		while read line
+		do
+			printf "	entering $line"
+			cd "$line"
+			encrypt_dir
+		done < $file_of_dir
 
-	wait
-	rm $maindir/* -fr
-	printf "\n"
-fi
+		wait
+		rm $maindir/* -fr
+		printf "\n"
+	fi
+done < $file_init

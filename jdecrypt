@@ -1,9 +1,11 @@
 #!/bin/sh -e
 
 export GPG_TTY=$(tty)
+file_init="/tmp/jdecrypt"
 file_of_dir="/tmp/jdecryptdirs"
 file_of_gpg_files="/tmp/jdecryptgpgfiles"
 
+printf "" > $file_init
 while [ $# -ge 1 ]; do
 	case "${1}" in
 		-p|--path)
@@ -15,11 +17,12 @@ while [ $# -ge 1 ]; do
 			shift
 			;;
 		*)
-			if [ ! -z "$path" ]; then
-				printf "unrecognized option $1\n"
-				exit 1
+			if test -f "$1" -o -d "$1"
+			then
+				echo "$(readlink -f "$1")" >> $file_init
 			else
-				path="$1"
+				printf "Can't recognize $1\nExiting...\n"
+				exit 1
 			fi
 			;;
 	esac
@@ -60,9 +63,11 @@ decrypt_dir () {
 	done < $file_of_gpg_files
 }
 
-if [ -z "$path" ]
+if [ ! -s "$file_init" ]
 then
-	printf "Please specify a folder or a file\n"
+	printf "Please specify a folder, a file or a list of files and folders\n\n"
+	printf "Example:\n"
+	printf "jdecrypt file1.txt pictures/\n"
 	exit 0
 fi
 
@@ -71,33 +76,36 @@ then
 	userID="$USER"
 	decrypt_command='gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1"'
 else
-	printf "no user provided\n"
 	decrypt_command='gpg -o "$decryptedfile" --yes --decrypt "$1"'
 fi
 
-
-if [ -f "$path" ]
-then
-	case "$path" in
-		*.gpg)
-			decrypt_file "$path"
-			;;
-		*)
-			echo "No file to decrypt"
-			;;
-	esac
-else
-	cd $path
-	path=$(pwd)
-	printf "looking for gpg files in $path\n\n"
-	find $path/ -type d > $file_of_dir
-	while read line
-	do
-		printf "	entering $line"
-		cd "$line"
-		decrypt_dir
-	done < $file_of_dir
-
-	rm $file_of_dir $file_of_gpg_files -f
-	printf "\n"
-fi
+while read entry
+do
+	if [ -f "$entry" ]
+	then
+		case "$entry" in
+			*.gpg)
+				decrypt_file "$entry"
+				;;
+			*)
+				printf "No file to decrypt\n"
+				;;
+		esac
+	elif [ -d "$entry" ]
+	then
+		cd $entry
+		find $entry/ -type d > $file_of_dir
+		while read line
+		do
+			printf "	entering $line"
+			cd "$line"
+			decrypt_dir
+		done < $file_of_dir
+	
+		rm $file_of_dir $file_of_gpg_files -f
+		printf "\n"
+	else
+		printf "Entry error "$entry"\n"
+		exit 1
+	fi
+done < $file_init
