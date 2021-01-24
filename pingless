@@ -1,0 +1,7 @@
+#!/bin/sh
+
+while true
+do
+ping -c 1 1.1.1.1 | grep ttl | sed 's/.* time=//'
+sleep 1
+done
