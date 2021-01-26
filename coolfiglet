@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+for i in $(seq 4)
+do
+	$TERMINAL -e fig $i &
+	sleep .06
+done

@@ -2,5 +2,5 @@
 
 dl_folder=$HOME/download/torrent
 link=$(xclip -o -selection clipboard)
-command="$TERMINAL -e transmission-cli -w $dl_folder/ "$link""
+command="$TERMINAL -e transmission-remote -w $dl_folder/ -a "$link""
 eval $command
