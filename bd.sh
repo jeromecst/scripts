@@ -11,8 +11,7 @@ do
 	if grep "$cur_date" /tmp/bd > /dev/null; then
 		line="$(grep -n "$cur_date" /tmp/bd | cut -d : -f 1)"
 		name="$(cat /home/jerome/.jserv/notes/bd.md | grep "$cur_date" | cut -d ' ' -f 1)"
-		if [ "$n" == "0" ]
-		then
+		if [ "$n" == "0" ]; then
 			echo "Anniversaire de $name aujourd'hui !!"
 		else
 			echo "Anniversaire de $name dans $n jours !!"

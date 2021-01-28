@@ -28,22 +28,19 @@ input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $DMENU -p "Web" )
 [ "$input" = Paste ] && input=$(xclip -selection c -o)
 
 # if input contains a dot or : and doesn't contain a space: suppose it's a link
-if echo "$input" | grep "\\.\|:" | grep -v ' '
-then
+if echo "$input" | grep "\\.\|:" | grep -v ' '; then
 	eval $browser \"$input\"
 	exit 0
 fi
 
-if ! grep -q "\[$input\]" "$bookmarks"
-then 
+if ! grep -q "\[$input\]" "$bookmarks"; then 
 	search=$input
 	input="Web"
 fi
 
 link=$(grep "\[$input\]" "$bookmarks" | sed "s/.*$input] //g")
 
-if grep -q "$input.*{}" "$bookmarks"
-then
+if grep -q "$input.*{}" "$bookmarks"; then
 	if [ -z "$search" ]; then
 		search=$(printf "" | $DMENU -p "$input")
 		[ -z "$search" ] && exit 0

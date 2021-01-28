@@ -30,8 +30,7 @@ mute_mic () {
 get_network () {
 	network_name=$( iwctl station wlan0 show | grep "Connected network" | awk '{ print $3 }' )
 	network_state=$( iwctl station wlan0 show | grep "State" | awk '{ print $2 }')
-	if [ "$network_state" = "disconnected" -o -z "$network_state" ] 
-	then
+	if [ "$network_state" = "disconnected" -o -z "$network_state" ] ; then
 		network=" wifi disconnected"
 	else
 		network=" $network_name"
@@ -48,16 +47,14 @@ get_date () {
 
 get_volume () {
 	echo $muted
-	if [ "$muted" = "no" ]
-	then
+	if [ "$muted" = "no" ]; then
 		volume=" $(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|, ]//g')%"
 		update=1
 	fi
 }
 
 mic_status() {
-	if [ -n "$(pactl list sources | grep "Mute: yes")" ]
-	then
+	if [ -n "$(pactl list sources | grep "Mute: yes")" ] ; then
 		mic=""
 	else
 		mic=""

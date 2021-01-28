@@ -17,8 +17,7 @@ while [ $# -ge 1 ]; do
 			shift
 			;;
 		*)
-			if test -f "$1" -o -d "$1"
-			then
+			if test -f "$1" -o -d "$1"; then
 				echo "$(readlink -f "$1")" >> $file_init
 			else
 				printf "Can't recognize $1\nExiting...\n"
