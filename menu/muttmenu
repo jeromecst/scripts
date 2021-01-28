@@ -7,8 +7,9 @@ then
 	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 fi
 
-cmd="mutt -F $mutt_conf/$(ls $mutt_conf/ | $DMENU -p "vim")"
+
+cmd="$(ls $mutt_conf/ | $DMENU -p "vim")"
 if [ -n "$cmd" ]
 then
-	$TERMINAL -e $cmd
+	$TERMINAL -e mutt -F $mutt_conf/$cmd
 fi

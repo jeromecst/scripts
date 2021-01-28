@@ -68,7 +68,7 @@ then
 			exit 0
 		fi
 	fi
-	link=$(echo "$link" | sed "s/{}/$search/")
+	link=$(echo "$link" | sed "s|{}|$search|")
 	eval $browser \"$link\" &
 else
 	eval $browser \"$link\" &
