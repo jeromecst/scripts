@@ -1,14 +1,6 @@
 #!/bin/sh
 
 pdf_viewer=zathura
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -l 20 -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-else 
-	DMENU="$DMENU -l 20"
-fi
+[ -z "$DMENU" ] && DMENU="dmenu -l 20 -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f" || DMENU="$DMENU -l 20"
 pdf_file=$(find $HOME/ -not -path '*/[@.]*' -type f -name "*.pdf" | $DMENU -p "Zathura")
-if [ ! "$pdf_file" = "" ]
-then
-	$pdf_viewer "$pdf_file" &
-fi
+[ ! "$pdf_file" = "" ] && $pdf_viewer "$pdf_file" &

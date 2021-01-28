@@ -2,6 +2,6 @@
 
 while true
 do
-ping -c 1 1.1.1.1 | grep ttl | sed 's/.* time=//'
-sleep 1
+	ping -c 1 1.1.1.1 | grep ttl | sed 's/.* time=//'
+	sleep 1
 done

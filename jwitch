@@ -4,58 +4,41 @@
 #	- mpv
 #	- sxiv
 
-if [ -z "$CLIENTID" -o -z "$BEARERKEY" ]
-then
-	echo "No key provided, can't curl the api"
-	exit 0
-fi
-
 configfile="$HOME/.config/jwitch/config"
 maindir="/tmp/jwitch"
 jsondir="$maindir/json"
 thumdir="$maindir/thumb"
 selected="$maindir/selected"
 
-if [ ! -f "$configfile" ]
-then
-	echo "Can't find config file"
-	exit 0
-fi
+[ -z "$CLIENTID" -o -z "$BEARERKEY" ] && echo "No key provided, can't curl the api" && exit 0
+[ ! -f "$configfile" ] && echo "Can't find config file" && exit 0
 
-for dir in $maindir $jsondir $thumdir
-do
-	if [ -d $dir ]
-	then
+for dir in $maindir $jsondir $thumdir ; do
+	if [ -d $dir ]; then
 		rm -fr $dir/*
 	else
 		mkdir $dir
 	fi
 done
 
-while read l
-do
+while read l; do
 	curl -s -X GET "https://api.twitch.tv/helix/search/channels?query=$l&first=1" \
 		-H "client-id: $CLIENTID" \
 		-H "Authorization: Bearer $BEARERKEY" | jq '.' \
 		> $jsondir/$l &
-done < $configfile
-wait
+done < $configfile ; wait
 
-for file in $(ls $jsondir)
-do
+for file in $(ls $jsondir) ; do
 	live=$(cat $jsondir/$file | grep "is_live" | awk '{ print $2 }' | sed 's/[" ,]//g' )
-	if [ $live = "true" ]
-	then
+	if [ $live = "true" ]; then
 		link=$(cat $jsondir/$file | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[" ,]//g')
 		wget -q "$link" -O "$thumdir/$file" &
 	fi
-done
-wait
+done; wait
 
 cd $thumdir
 sxiv -obtp * > $selected
 
-while read s
-do
+while read s; do
 	mpv --mute=yes -ytdl https://www.twitch.tv/$s &> /dev/null
 done < $selected

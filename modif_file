@@ -6,8 +6,5 @@ while true
 do
 	current=$(md5sum $file)
 	sleep 3
-	if [ ! "$(md5sum "$file")" = "$current" ]
-	then
-		printf "file has changed ! \n"
-	fi
+	[ ! "$(md5sum "$file")" = "$current" ] && printf "file has changed ! \n"
 done

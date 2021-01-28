@@ -26,23 +26,14 @@ case "$1" in
 		;;
 esac
 
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
+[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 
 bookmarks="$HOME/.config/bookmarks"
 input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $DMENU -p "Web" )
 
-if [ -z "$input" ]
-then
-	exit 0
-fi
+[ -z "$input" ] && exit 0
 
-if [ "$input" = Paste ]
-then
-	input=$(xclip -selection c -o)
-fi
+[ "$input" = Paste ] && input=$(xclip -selection c -o)
 
 # if input contains a dot or : and doesn't contain a space: suppose it's a link
 if echo "$input" | grep "\\.\|:" | grep -v ' '
@@ -63,10 +54,7 @@ if grep -q "$input.*{}" "$bookmarks"
 then
 	if [ -z "$search" ]; then
 		search=$(printf "" | $DMENU -p "$input")
-		if [ -z "$search" ]
-		then 
-			exit 0
-		fi
+		[ -z "$search" ] && exit 0
 	fi
 	link=$(echo "$link" | sed "s|{}|$search|")
 	eval $browser \"$link\" &

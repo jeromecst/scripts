@@ -6,12 +6,7 @@ maindir="/tmp/jencryptdir"
 file_of_dir="$maindir/jencryptdirs"
 files_to_encrypt="$maindir/jencryptedgpgfiles"
 
-if [ -d $maindir ]
-then
-	rm $maindir/* -rf
-else
-	mkdir $maindir
-fi
+[ -d $maindir ] && rm $maindir/* -rf || mkdir $maindir
 
 printf "" > $file_init
 while [ $# -ge 1 ]; do
@@ -65,35 +60,30 @@ encrypt_dir () {
 	else
 		printf "\n"
 	fi
-	while read file
-	do
+	while read file; do
 		encrypt_file "$file"
 	done < $files_to_encrypt
 	wait
-	while read file
-	do
+	while read file; do
 		rm "$file"
 	done < $id &
 }
 
-if [ ! -s "$file_init" ]
-then
+if [ ! -s "$file_init" ]; then
 	printf "Please specify a folder, a file or a list of files and folders\n\n"
 	printf "Example:\n"
 	printf "jdecrypt file1.txt pictures/\n"
 	exit 0
 fi
 
-if [ -z "$userID" ]
-then
+if [ -z "$userID" ]; then
 	userID="$USER"
 	printf "no user provided, using $USER by default\n"
 fi
 
 while read entry
 do
-	if [ -f "$entry" ]
-	then
+	if [ -f "$entry" ]; then
 		case $entry in
 			*.gpg)
 				echo "No file to encrypt"

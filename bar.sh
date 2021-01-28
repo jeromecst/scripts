@@ -97,12 +97,7 @@ mute () {
 
 get_temp () {
 	temp=$(( $(cat /sys/class/thermal/thermal_zone$device_temp/temp) / 1000))
-	if [ $temp -ge 50 ] 
-	then
-		temp=" $temp°C"
-	else
-		temp=" $temp°C"
-	fi
+	[ $temp -ge 50 ]  && temp=" $temp°C" || temp=" $temp°C"
 }
 
 get_disk () {
@@ -114,24 +109,14 @@ init () {
 	device_temp=$(cat /sys/class/thermal/thermal_zone*/type | grep -n x86 | sed 's/:x86.*//g')
 	device_temp=$(($device_temp - 1))
 
-	if [ -f "/sys/class/power_supply/BAT0/status" ]
-	then 
-		display_battery=1
-	else
-		display_battery=0
-	fi
+	[ -f "/sys/class/power_supply/BAT0/status" ] && display_battery=1 || display_battery=0
 
 	pactl set-sink-mute @DEFAULT_SINK@ 0
 	pactl set-source-mute @DEFAULT_SOURCE@ 1
 	update=1
 	k=-1
 
-	get_disk
-	mic_status
-	mute
-	get_volume
-	get_date
-	get_time
+	get_disk; mic_status; mute; get_volume; get_date; get_time
 }
 
 update_case () {
@@ -172,8 +157,7 @@ main_battery (){
 			bar=" $mic - $disk - $temp - $volume - $network - $battery - $time - $date "
 			xsetroot -name "$bar"
 			update=0
-		fi
-		sleep .1
+		fi; sleep .1
 	done
 }
 
@@ -189,8 +173,7 @@ main_no_battery (){
 			bar=" $mic - $disk - $temp - $volume - $network - $time - $date "
 			xsetroot -name "$bar"
 			update=0
-		fi
-		sleep .1
+		fi; sleep .1
 	done
 }
 

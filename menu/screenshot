@@ -6,17 +6,9 @@
 #	- sxiv
 #	- dmenu
 
-if [ -n "$1" ]
-then 
-	screeshot="import"
-else
-	screeshot="imlib2_grab"
-fi
+[ -n "$1" ] && screeshot="import" || screeshot="imlib2_grab"
 
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
+[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $DMENU -p "Screenshot")
 
 case "$search" in
@@ -25,17 +17,12 @@ case "$search" in
 		;;
 	Screenshot)
 		name_file=$( printf "" | $DMENU -p "enter file name" )
-		if [ -z $name_file ]; then
-			name_file=$(date +%F-%T)
-		fi
+		[ -z $name_file ] && name_file=$(date +%F-%T)
 		$screeshot $HOME/$name_file.png
 		;;
 	Pin)
 		name_file=$(date +%F-%T)
-		if [ ! -d /tmp/screenshot ]
-		then 
-			mkdir /tmp/screenshot
-		fi
+		[ ! -d /tmp/screenshot ] && mkdir /tmp/screenshot
 		file=/tmp/screenshot/$name_file.png
 		$screeshot $file
 		sxiv -b -p $file &
@@ -45,10 +32,7 @@ case "$search" in
 		name_file=$(date +%F-%T)
 		file=/tmp/$name_file.png
 		$screeshot $file
-		if [ -e $file ]; then
-			echo $file exists
-			gimp $file &
-		fi
+		[ -e $file ] && gimp $file &
 		break
 		;;
 	Clipboard)

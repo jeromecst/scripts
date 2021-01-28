@@ -3,15 +3,9 @@
 #	- dmenu
 
 histfile="$HOME/.zhistory"
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
+[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 input=$(tac $histfile | $DMENU)
 echo $input
 $input &
 # add the new input to histfile if it's not already inside
-if ! grep -x "$input" $histfile
-then
-	echo "$input" >> $histfile
-fi
+! grep -x "$input" $histfile && echo "$input" >> $histfile

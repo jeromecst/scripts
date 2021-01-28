@@ -36,8 +36,7 @@ decrypt_file () {
 		printf "name file error, exiting...\n"
 		exit 1
 	fi
-	if ! eval "$decrypt_command" >/dev/null 2>&1
-	then
+	if ! eval "$decrypt_command" >/dev/null 2>&1 ; then
 		exit 1
 	fi
 	if [ ! -f "$decryptedfile" ]; then
@@ -57,22 +56,19 @@ decrypt_dir () {
 	else
 		printf "\n"
 	fi
-	while read file
-	do
+	while read file; do
 		decrypt_file "$file"
 	done < $file_of_gpg_files
 }
 
-if [ ! -s "$file_init" ]
-then
+if [ ! -s "$file_init" ]; then
 	printf "Please specify a folder, a file or a list of files and folders\n\n"
 	printf "Example:\n"
 	printf "jdecrypt file1.txt pictures/\n"
 	exit 0
 fi
 
-if [ -n "$userID" ]
-then
+if [ -n "$userID" ]; then
 	userID="$USER"
 	decrypt_command='gpg  -r $userID -o "$decryptedfile" --yes --decrypt "$1"'
 else
@@ -81,8 +77,7 @@ fi
 
 while read entry
 do
-	if [ -f "$entry" ]
-	then
+	if [ -f "$entry" ]; then
 		case "$entry" in
 			*.gpg)
 				decrypt_file "$entry"
@@ -91,12 +86,10 @@ do
 				printf "No file to decrypt\n"
 				;;
 		esac
-	elif [ -d "$entry" ]
-	then
+	elif [ -d "$entry" ]; then
 		cd $entry
 		find $entry/ -type d > $file_of_dir
-		while read line
-		do
+		while read line; do
 			printf "	entering $line"
 			cd "$line"
 			decrypt_dir

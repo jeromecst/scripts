@@ -2,15 +2,7 @@
 
 mutt_conf=$HOME/.config/mutt
 
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
-
+[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 
 cmd="$(ls $mutt_conf/ | $DMENU -p "vim")"
-if [ -n "$cmd" ]
-then
-	$TERMINAL -e mutt -F $mutt_conf/$cmd
-	echo $TERMINAL -e $cmd
-fi
+[ -n "$cmd" ] && $TERMINAL -e mutt -F $mutt_conf/$cmd

@@ -1,11 +1,5 @@
 #!/bin/sh
 
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
+[ -z "$DMENU" ] && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 host=$(cat .ssh/config | grep "Host " | awk '{ print $2}' | $DMENU -p "ssh" )
-if [ -n "$host" ]
-then
-	$TERMINAL -e ssh $host &
-fi
+[ -n "$host" ] && $TERMINAL -e ssh $host &

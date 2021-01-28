@@ -4,12 +4,6 @@
 #	- mpv
 #	- sxiv
 
-if [ -z "$CLIENTID" -o -z "$BEARERKEY" ]
-then
-	echo "No key provided, can't curl the api"
-	exit 0
-fi
-
 topstreams="/tmp/jwitch2/topstreams.js"
 names="/tmp/jwitch2/names"
 thumblink="/tmp/jwitch2/links"
@@ -17,14 +11,10 @@ thumbdir="/tmp/jwitch2/thumbs"
 maindir="/tmp/jwitch2"
 selected="/tmp/jwitch2/selected"
 
-for dir in $maindir $thumbdir
-do
-	if [ -d $dir ]
-	then
-		rm -fr $dir/*
-	else
-		mkdir $dir
-	fi
+[ -z "$CLIENTID" -o -z "$BEARERKEY" ] && echo "No key provided, can't curl the api" && exit 0
+
+for dir in $maindir $thumbdir; do
+	[ -d $dir ] && rm -fr $dir/* || mkdir $dir
 done
 
 curl -s -X GET "https://api.twitch.tv/helix/streams?language=fr&first=40" \
@@ -36,18 +26,15 @@ cat $topstreams | jq '.' | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/["
 
 nb=$(wc -l $names | awk '{ print $1}')
 
-for i in $(seq $nb)
-do
+for i in $(seq $nb); do
 	link=$(sed -n ""$i"p" < $thumblink)
 	name=$(sed -n ""$i"p" < $names)
 	wget -q "$link" -O "$thumbdir/$name"&
-done
-wait
+done; wait
 
 cd $thumbdir
 cat $names | sxiv -oitp  > $selected
 
-while read l
-do
+while read l; do
 	mpv --mute=yes "https://www.twitch.tv/$l" &> /dev/null
 done < $selected

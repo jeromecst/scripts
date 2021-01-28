@@ -4,11 +4,7 @@
 #	- dmenu
 #	- pass
 
-if [ -z "$DMENU" ] 
-then 
-	DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-fi
+[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 
 passdir="$HOME/.password-store"
-
 pass -c $(find $passdir -name "*.gpg" | sed "s!"$passdir/"!!g" | sed 's/.gpg//g' | $DMENU -p "Password:")
