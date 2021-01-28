@@ -4,22 +4,18 @@
 #	- dmenu
 
 case "$1" in
-	brave)
-		browser='brave' ;;
 	brave-tor)
 		browser='brave --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE localhost"' ;;
-	firefox)
-		browser='firefox' ;;
 	fftor)
 		browser='firefox -P tor' ;;
 	ffclassic)
 		browser='firefox -P classic' ;;
 	tor)
-		browser="$HOME/download/tor-browser_en-US/Browser/./start-tor-browser --allow-remote"
-		;;
+		browser="$HOME/download/tor-browser_en-US/Browser/./start-tor-browser --allow-remote" ;;
+	"")
+		[ -n "$BROWSER" ] && browser="$BROWSER" || browser="firefox" ;;
 	*)
-		[ -n "$BROWSER" ] && browser="$BROWSER" || browser="firefox"
-		;;
+		browser='$1' ;;
 esac
 
 [ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
