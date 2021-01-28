@@ -5,24 +5,20 @@
 
 case "$1" in
 	brave)
-		browser='brave'
-		;;
+		browser='brave' ;;
 	brave-tor)
-		browser='brave --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE localhost"'
-		;;
+		browser='brave --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE localhost"' ;;
 	firefox)
-		browser='firefox'
-		;;
+		browser='firefox' ;;
+	fftor)
+		browser='firefox -P tor' ;;
+	ffclassic)
+		browser='firefox -P classic' ;;
 	tor)
 		browser="$HOME/download/tor-browser_en-US/Browser/./start-tor-browser --allow-remote"
 		;;
 	*)
-		if [ -n "$BROWSER" ]
-		then 
-			browser="$BROWSER"
-		else
-			browser="firefox"
-		fi
+		[ -n "$BROWSER" ] && browser="$BROWSER" || browser="firefox"
 		;;
 esac
 
