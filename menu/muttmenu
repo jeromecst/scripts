@@ -11,5 +11,4 @@ cmd="mutt -F $mutt_conf/$(ls $mutt_conf/ | $DMENU -p "vim")"
 if [ -n "$cmd" ]
 then
 	$TERMINAL -e $cmd
-	echo $TERMINAL -e $cmd
 fi
