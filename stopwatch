@@ -1,8 +1,7 @@
 #!/bin/sh
 
 date1=`date +%s`
-while true
-do 
+while true; do 
 	echo -n "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)"
 	echo -n "\033[8D"
 	sleep 1s

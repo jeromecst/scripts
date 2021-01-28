@@ -2,8 +2,7 @@
 
 file=/tmp/test
 
-while true
-do
+while true; do
 	current=$(md5sum $file)
 	sleep 3
 	[ ! "$(md5sum "$file")" = "$current" ] && printf "file has changed ! \n"
