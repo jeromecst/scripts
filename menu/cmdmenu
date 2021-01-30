@@ -1,5 +1,5 @@
 #!/bin/sh
 
 [ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-app=$(cat $HOME/.config/apps | $DMENU -p "exec")
+app=$($DMENU -p "exec" < "$HOME/.config/apps" )
 [ -n "$app" ] && $TERMINAL -e $app &

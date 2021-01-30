@@ -6,43 +6,36 @@
 #	- sxiv
 #	- dmenu
 
-[ -n "$1" ] && screeshot="import" || screeshot="imlib2_grab"
-
-[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-search=$( printf "Screenshot\nPin\nGimp\nClipboard" | $DMENU -p "Screenshot")
+[ ! -d /tmp/screenshot ] && mkdir /tmp/screenshot
+[ -n "$1" ] && screenshot="import" || screenshot="imlib2_grab"
+[ -z "$DMENU" ] && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+search=$(printf "Screenshot\nPin\nGimp\nClipboard" | $DMENU -p "Screenshot")
+date=$(date +%F-%T)
+img="$(mktemp /tmp/screenshot/XXXXXXXXX.png)"
 
 case "$search" in
 	"")
-		exit 1
-		;;
+		exit 1 ;;
 	Screenshot)
-		name_file=$( printf "" | $DMENU -p "enter file name" )
-		[ -z $name_file ] && name_file=$(date +%F-%T)
-		$screeshot $HOME/$name_file.png
-		;;
+		eval "$screenshot" "$img"
+		input=$(printf "" | $DMENU -p "enter file name")
+		[ -z "$input" ] && input=$date
+		( echo "$input" | grep ".png\|.jpg\|.jpeg" ) || input=$input.png
+		mv $img "$HOME/$input" 
+		break ;;
 	Pin)
-		name_file=$(date +%F-%T)
-		[ ! -d /tmp/screenshot ] && mkdir /tmp/screenshot
-		file=/tmp/screenshot/$name_file.png
-		$screeshot $file
-		sxiv -b -p $file &
-		break
-		;;
+		$screenshot $img
+		sxiv -b -p $img &
+		break ;;
 	Gimp)
-		name_file=$(date +%F-%T)
-		file=/tmp/$name_file.png
-		$screeshot $file
-		[ -e $file ] && gimp $file &
-		break
-		;;
+		$screenshot $img
+		[ -e $img ] && gimp $img &
+		break ;;
 	Clipboard)
-		name_file=$(date +%F-%T)
-		file=/tmp/$name_file.png
-		$screeshot $file 
-		xclip -selection clipboard -t image/png -i $file
-		break
-		;;
+		$screenshot $img
+		xclip -selection clipboard -t image/png -i $img
+		break ;;
 	*)
-		$screeshot $HOME/"$search.png"
-		;;
+		( echo "$search" | grep ".png\|.jpg\|.jpeg" ) || date=$seach.png
+		$screenshot $HOME/"$search" ;;
 esac

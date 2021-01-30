@@ -1,11 +1,10 @@
 #!/bin/sh -e
 
 export GPG_TTY=$(tty)
-file_init="/tmp/jdecrypt"
-file_of_dir="/tmp/jdecryptdirs"
-file_of_gpg_files="/tmp/jdecryptgpgfiles"
+file_init="$(mktemp /tmp/jdecrypt.XXXXX)"
+file_of_dir="$(mktemp /tmp/jdecrypt.XXXXX)"
+file_of_gpg_files="$(mktemp /tmp/jdecrypt.XXXXX)"
 
-printf "" > $file_init
 while [ $# -ge 1 ]; do
 	case "${1}" in
 		-p|--path)
@@ -101,3 +100,5 @@ do
 		exit 1
 	fi
 done < $file_init
+
+rm -fr $file_init $file_of_dir $file_of_gpg_files

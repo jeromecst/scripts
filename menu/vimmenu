@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+[ -z "$DMENU" ] && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
 
-file=$(cat $HOME/.config/vimmenu | $DMENU -p "vim")
+file=$($DMENU -p "vim" < $HOME/.config/vimmenu)
 [ -n "$file" ] && file=$(echo $file | sed "s|~/|$HOME/|") && $TERMINAL -e vim $file &

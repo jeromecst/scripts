@@ -3,6 +3,9 @@
 #	- xclip
 #	- dmenu
 
+[ -z "$DMENU" ] && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
+bookmarks="$HOME/.config/bookmarks"
+
 case "$1" in
 	brave-tor)
 		browser='brave --proxy-server="socks5://localhost:9050" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE localhost"' ;;
@@ -18,11 +21,7 @@ case "$1" in
 		browser='$1' ;;
 esac
 
-[ -z "$DMENU" ]  && DMENU="dmenu -fn "monospace:size=10" -nb "#222222" -nf "#bbbbbb" -sb "#cc0000" -sf "#eeeeee" -i -f"
-
-bookmarks="$HOME/.config/bookmarks"
-input=$( grep -o "\[.*\]" $bookmarks | sed 's/[][]//g' | $DMENU -p "Web" )
-
+input=$(grep -o "\[.*\]" "$bookmarks" | sed 's/[][]//g' | $DMENU -p "Web" )
 [ -z "$input" ] && exit 0
 
 [ "$input" = Paste ] && input=$(xclip -selection c -o)

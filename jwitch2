@@ -4,25 +4,21 @@
 #	- mpv
 #	- sxiv
 
-topstreams="/tmp/jwitch2/topstreams.js"
-names="/tmp/jwitch2/names"
-thumblink="/tmp/jwitch2/links"
-thumbdir="/tmp/jwitch2/thumbs"
-maindir="/tmp/jwitch2"
-selected="/tmp/jwitch2/selected"
+maindir="$(mktemp -d /tmp/jwitch2.XXXXX)"
+topstreams="$(mktemp $maindir/topstreams.js.XXXXX)"
+names="$(mktemp $maindir/XXXXX)"
+thumblink="$(mktemp $maindir/XXXXX)"
+thumbdir="$(mktemp -d $maindir/XXXXX)"
+selected="$(mktemp $maindir/XXXXX)"
 
 [ -z "$CLIENTID" -o -z "$BEARERKEY" ] && echo "No key provided, can't curl the api" && exit 0
-
-for dir in $maindir $thumbdir; do
-	[ -d $dir ] && rm -fr $dir/* || mkdir $dir
-done
 
 curl -s -X GET "https://api.twitch.tv/helix/streams?language=fr&first=40" \
 	-H "client-id: $CLIENTID" \
 	-H "Authorization: Bearer $BEARERKEY" > $topstreams
 
-cat $topstreams | jq '.' | grep "user_name" | awk '{ print $2 }' | sed 's/[", ]//g' > $names
-cat $topstreams | jq '.' | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[", ]//g' | sed 's/{width}/1920/g' | sed 's/{height}/1080/g' > $thumblink
+jq '.' $topstreams | grep "user_name" | awk '{ print $2 }' | sed 's/[", ]//g' > $names
+jq '.' $topstreams | grep "thumbnail_url" | awk '{ print $2 }' | sed 's/[", ]//g' | sed 's/{width}/1920/g' | sed 's/{height}/1080/g' > $thumblink
 
 nb=$(wc -l $names | awk '{ print $1}')
 
@@ -33,7 +29,7 @@ for i in $(seq $nb); do
 done; wait
 
 cd $thumbdir
-cat $names | sxiv -oitp  > $selected
+sxiv -obitp < $names > $selected 
 
 while read l; do
 	mpv --mute=yes "https://www.twitch.tv/$l" &> /dev/null

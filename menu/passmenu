@@ -8,3 +8,4 @@
 
 passdir="$HOME/.password-store"
 pass -c $(find $passdir -name "*.gpg" | sed "s!"$passdir/"!!g" | sed 's/.gpg//g' | $DMENU -p "Password:")
+

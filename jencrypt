@@ -1,14 +1,11 @@
 #!/bin/sh -e
 
 export GPG_TTY=$(tty)
-file_init="/tmp/jencrypt"
-maindir="/tmp/jencryptdir"
-file_of_dir="$maindir/jencryptdirs"
-files_to_encrypt="$maindir/jencryptedgpgfiles"
+maindir="$(mktemp -d /tmp/jencrypt.XXXXX)"
+file_init="$(mktemp /tmp/jencrypt.XXXXX)"
+file_of_dir="$(mktemp $maindir/jencryptdir.XXXXX)"
+files_to_encrypt="$(mktemp $maindir/jencryptdir.XXXXX)"
 
-[ -d $maindir ] && rm $maindir/* -rf || mkdir $maindir
-
-printf "" > $file_init
 while [ $# -ge 1 ]; do
 	case "${1}" in
 		-p|--path)
@@ -108,3 +105,6 @@ do
 		printf "\n"
 	fi
 done < $file_init
+
+
+rm -fr $maindir $file_init $file_of_dir $files_to_encrypt
