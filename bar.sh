@@ -13,17 +13,26 @@ LANG=C
 # handle signal
 trap "get_volume" 10
 trap "mute" 34
-trap "mute_mic" 35
-trap "update" 12
+trap "mic_status" 35
+trap "echo update" 36
 
-update () {
-	echo updating...
-	update=1
+
+get_time () { time=" $( date +"%H:%M" )"; }
+get_date () { date=" $( date +"%d %b %Y" )"; }
+get_weather () { weather=$(curl wttr.in/?format=3) ; }
+set_bar_battery (){ bar=" $mic - $disk - $temp - $volume - $network - $battery - $time - $date " ; }
+set_bar_not_battery() { bar=" $mic - $disk - $temp - $volume - $network - $time - $date " ; }
+get_disk () { disk=" $(df -h | grep -w / | awk ' { print $4 }')"  ; }
+
+
+mute () {
+	muted=$(pacmd list-sinks | grep mute | awk '{ print $2 }')
+	[ $muted = "yes" ] && volume="" || get_volume
 }
 
-mute_mic () {
-	mic_status
-	update
+get_temp () {
+	temp=$(( $(cat /sys/class/thermal/thermal_zone$device_temp/temp) / 1000))
+	[ $temp -ge 50 ] && temp=" $temp°C" || temp=" $temp°C"
 }
 
 
@@ -37,19 +46,9 @@ get_network () {
 	fi
 }
 
-get_time () {
-	time=" $( date +"%H:%M" )"
-}
-
-get_date () {
-	date=" $( date +"%d %b %Y" )"
-}
-
 get_volume () {
-	echo $muted
 	if [ "$muted" = "no" ]; then
 		volume=" $(pacmd list-sinks|grep -A 15 '* index'| awk '/volume: front/{ print $5 }' | sed 's/[%|, ]//g')%"
-		update=1
 	fi
 }
 
@@ -78,30 +77,6 @@ get_battery () {
 	fi
 }
 
-get_weather () {
-	weather=$(curl wttr.in/?format=3)
-}
-
-mute () {
-	muted=$(pacmd list-sinks | grep mute | awk '{ print $2 }')
-	if [ $muted = "yes" ]; then
-		volume=""
-	else
-		get_volume
-	fi
-	update=1
-}
-
-get_temp () {
-	temp=$(( $(cat /sys/class/thermal/thermal_zone$device_temp/temp) / 1000))
-	[ $temp -ge 50 ]  && temp=" $temp°C" || temp=" $temp°C"
-}
-
-get_disk () {
-	disk=" $(df -h | grep -w / | awk ' { print $4 }')" 
-}
-
-
 init () {
 	device_temp=$(cat /sys/class/thermal/thermal_zone*/type | grep -n x86 | sed 's/:x86.*//g')
 	device_temp=$(($device_temp - 1))
@@ -110,74 +85,17 @@ init () {
 
 	pactl set-sink-mute @DEFAULT_SINK@ 0
 	pactl set-source-mute @DEFAULT_SOURCE@ 1
-	update=1
-	k=-1
-
-	get_disk; mic_status; mute; get_volume; get_date; get_time
+	mute
 }
 
-update_case () {
-	k=$(($k+1))
-	case $k in 
-		0)
-			get_date
-			update
-			;;
-		150)
-			get_time
-			update
-			;;
-		200)
-			mic_status
-			update
-			;;
-		300) 
-			get_disk
-			update
-			;;
-		600)
-			k=-1
-			;;
-	esac
-}
-
-main_battery (){
-	while true; do
-		update_case
-		if [ $(($k%50)) -eq 0 ]; then
-			get_temp
-			get_battery
-			get_network
-			update
-		fi
-		if [ "$update" -eq 1 ];then
-			bar=" $mic - $disk - $temp - $volume - $network - $battery - $time - $date "
-			xsetroot -name "$bar"
-			update=0
-		fi; sleep .1
-	done
-}
-
-main_no_battery (){
-	while true; do
-		update_case
-		if [ $(($k%50)) -eq 0 ]; then
-			get_temp
-			get_network
-			update
-		fi
-		if [ "$update" -eq 1 ];then
-			bar=" $mic - $disk - $temp - $volume - $network - $time - $date "
-			xsetroot -name "$bar"
-			update=0
-		fi; sleep .1
-	done
+display () {
+	[ $display_battery = "1" ] && get_battery && set_bar_battery || set_bar_not_battery
+	xsetroot -name "$bar"
 }
 
 init
-case $display_battery in
-	1)
-		main_battery;;
-	0)
-		main_no_battery;;
-esac
+while true; do
+	get_date; get_time; mic_status; get_disk; get_temp; get_network
+	display
+	sleep 10 & wait $!
+done
