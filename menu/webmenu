@@ -43,6 +43,7 @@ if grep -q "$input.*{}" "$bookmarks"; then
 	if [ -z "$search" ]; then
 		search=$(printf "" | $DMENU -p "$input")
 		[ -z "$search" ] && exit 0
+		search=$(echo $search | sed "s/ /+/g" )
 	fi
 	link=$(echo "$link" | sed "s|{}|$search|")
 	eval $browser \"$link\" &
